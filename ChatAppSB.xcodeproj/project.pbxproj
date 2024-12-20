@@ -14,7 +14,7 @@
 		690EAAF62D15276900411DCB /* Exceptions for "ChatAppSB" folder in "ChatAppSB" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Support/Info.plist,
 			);
 			target = 690EAAE32D15276600411DCB /* ChatAppSB */;
 		};
@@ -147,7 +147,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AQAGJQ52MF;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ChatAppSB/Info.plist;
+				INFOPLIST_FILE = ChatAppSB/Support/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -176,7 +176,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AQAGJQ52MF;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ChatAppSB/Info.plist;
+				INFOPLIST_FILE = ChatAppSB/Support/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
