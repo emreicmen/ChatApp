@@ -93,13 +93,26 @@ class RegisterViewController: UIViewController {
         fullNameTextField.addTarget(self, action: #selector(handleTextViewChanged(sender:)), for: .editingChanged)
         userNameTextField.addTarget(self, action: #selector(handleTextViewChanged(sender:)), for: .editingChanged)
     }
+    
     @objc func register() {
-        print("Register")
+        
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        guard let userName = userNameTextField.text else { return }
+        guard let fullName = fullNameTextField.text else { return }
+        guard let profileImage = profileImage else { return }
+        
+        let cridential = AuthCredential(email: email, password: password, fullName: fullName, userName: userName, prifleImage: profileImage)
+        
+        
+        print("Register clicked")
     }
     
     @objc func signIn() {
         navigationController?.popViewController(animated: true)
     }
+    
+    private var profileImage: UIImage?
 
     
     @objc func handleTextViewChanged(sender: UITextField) {
@@ -137,12 +150,15 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         guard let selectedImage = info[.editedImage] as? UIImage else { return }
+        
+        self.profileImage = selectedImage
+        
         profileImagButton.layer.cornerRadius = profileImagButton.frame.width / 2
         profileImagButton.layer.masksToBounds = true
         profileImagButton.layer.borderWidth = 3
         profileImagButton.layer.borderColor = MAIN_COLOR.cgColor
         profileImagButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        print("Captured")
+
         dismiss(animated: true, completion: nil)
     }
 }
