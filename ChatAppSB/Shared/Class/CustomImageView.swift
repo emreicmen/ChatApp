@@ -14,7 +14,7 @@ class CustomImageView: UIImageView {
         
         super.init(frame: .zero)
 
-        contentMode = .scaleAspectFit
+        contentMode = .scaleAspectFill
         layer.cornerRadius = cornerRadius
         
         if let image = image {

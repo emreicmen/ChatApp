@@ -96,14 +96,20 @@ class RegisterViewController: UIViewController {
     
     @objc func register() {
         
-        guard let email = emailTextField.text else { return }
+        guard let email = emailTextField.text?.lowercased() else { return }
         guard let password = passwordTextField.text else { return }
-        guard let userName = userNameTextField.text else { return }
+        guard let userName = userNameTextField.text?.lowercased() else { return }
         guard let fullName = fullNameTextField.text else { return }
         guard let profileImage = profileImage else { return }
         
-        let cridential = AuthCredential(email: email, password: password, fullName: fullName, userName: userName, prifleImage: profileImage)
+        let credential = AuthCredential(email: email, password: password, fullName: fullName, userName: userName, profileImage: profileImage)
         
+        AuthServices.registerUser(credential: credential) { error in
+            if let error = error {
+                print("Error while creating user (RegisterVC):\(error.localizedDescription)")
+                return
+            }
+        }
         
         print("Register clicked")
     }
