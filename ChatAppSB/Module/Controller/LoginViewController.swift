@@ -67,10 +67,14 @@ class LoginViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
         
+        configureUI()        
         configureForTextField()
     }
+    
+    
+    
+    
     
     //MARK: - Helpers
     private func configureUI() {
@@ -145,7 +149,8 @@ class LoginViewController: UIViewController {
     }
     
     @objc func loginWithGoogle() {
-        print("google")
+        setupGoogle()
+        print("Login with google")
     }
     
     @objc func handleTextViewChanged(sender: UITextField) {
@@ -159,7 +164,7 @@ class LoginViewController: UIViewController {
         loginButton.setTitleColor(viewModel.buttonTitleColor, for: .normal)
     }
     
-    private func navigateToConversationViewController() {
+    func navigateToConversationViewController() {
         let conversationViewController = ConversationViewController()
         let navigationController = UINavigationController(rootViewController: conversationViewController)
         navigationController.modalPresentationStyle = .fullScreen

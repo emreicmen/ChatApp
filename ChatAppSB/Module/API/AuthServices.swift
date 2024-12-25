@@ -18,6 +18,15 @@ struct AuthCredential {
     let profileImage: UIImage
 }
 
+struct AuthCredentialEmail {
+    
+    let email: String
+    let uid: String
+    let fullName: String
+    let userName: String
+    let profileImage: UIImage
+}
+
 struct AuthServices {
     
     static func logIn(withEmail email: String, withPassword password: String, completion: @escaping (AuthDataResult?, Error?) -> Void) {
@@ -48,6 +57,22 @@ struct AuthServices {
                 collectionUser.document(uid).setData(data, completion: completion)
             }
             print("ImageUrl: \(imageUrl)")
+        }
+    }
+    
+    static func registerWithGoogle(credential: AuthCredentialEmail, completion: @escaping(Error?) -> Void) {
+        
+        FileUploader.uploadImage(image: credential.profileImage) { imageUrl in
+            let data: [String: Any] = [
+                "email": credential.email,
+                "userName": credential.userName,
+                "fullName": credential.fullName,
+                "uid": credential.uid,
+                "profleImageURL": imageUrl
+            ]
+            
+            collectionUser.document(credential.uid).setData(data, completion: completion)
+
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import JGProgressHUD
+import SDWebImage
 
 public extension UIViewController {
     
@@ -29,5 +30,17 @@ public extension UIViewController {
         }))
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    func getImageFromGoogleProfile(withImageUrl imageUrl: URL, completion: @escaping(UIImage) -> Void) {
+        SDWebImageManager.shared.loadImage(with: imageUrl, options: .continueInBackground, progress: nil) { image, data, error, cacheType, finished, url in
+            if let error = error {
+                self.showMessage(title: "Error", message: error.localizedDescription)
+                return
+            }
+            
+            guard let image = image else { return }
+            completion(image)
+        }
     }
 }
