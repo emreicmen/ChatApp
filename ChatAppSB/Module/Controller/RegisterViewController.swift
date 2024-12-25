@@ -113,10 +113,8 @@ class RegisterViewController: UIViewController {
                 self.showMessage(title: "Error", message: error.localizedDescription)
                 return
             }
+            self.delegate?.didSuccessfullyCreatedAccount(self)
         }
-        
-        delegate?.didSuccessfullyCreatedAccount(self)
-        
         print("Register clicked")
     }
     
