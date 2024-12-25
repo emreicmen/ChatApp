@@ -13,6 +13,7 @@ class ConversationViewController: UIViewController {
     //MARK: - Properties
     private var user: User
     private let tableView: UITableView = UITableView()
+    private let reuseIdentifier = "ConversationCell"
     
     
     
@@ -39,13 +40,15 @@ class ConversationViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 80
-        tableView.backgroundColor = .red
+        tableView.backgroundColor = .white
+        tableView.register(ConversationCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.tableFooterView = UIView()
     }
     
     private func configureUI() {
         title = user.fullName
-        view.backgroundColor = .yellow
-
+        view.backgroundColor = .white
+        
         let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
         let newConversationBarButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(createNewChat))
         
@@ -76,9 +79,9 @@ class ConversationViewController: UIViewController {
 //MARK: - TableView
 extension ConversationViewController: UITableViewDelegate, UITableViewDataSource {
 
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
+        return cell
     }
         
     
