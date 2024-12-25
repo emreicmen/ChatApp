@@ -53,7 +53,7 @@ class LoginViewController: UIViewController {
         }
         button.imageView?.contentMode = .scaleAspectFit // Resmi uygun şekilde ölçeklendir
 
-        button.addTarget(self, action: #selector(google), for: .touchUpInside)
+        button.addTarget(self, action: #selector(loginWithGoogle), for: .touchUpInside)
         return button
     }()
 
@@ -115,8 +115,23 @@ class LoginViewController: UIViewController {
         emailTextField.addTarget(self, action: #selector(handleTextViewChanged(sender:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(handleTextViewChanged(sender:)), for: .editingChanged)
     }
+    
     @objc func login() {
-        print("Login")
+        
+        guard let email = emailTextField.text?.lowercased() else { return }
+        guard let password = passwordTextField.text else { return }
+        
+        showProgressBar(true)
+        AuthServices.logIn(withEmail: email, withPassword: password) { result, error in
+            if let error = error {
+                self.showProgressBar(false)
+                self.showMessage(title: "Error", message: error.localizedDescription)
+                return
+            }
+            self.showProgressBar(false)
+            print("Login successed")
+            self.navigateToConversationViewController()
+        }
     }
     
     @objc func forgetPassword() {
@@ -124,17 +139,17 @@ class LoginViewController: UIViewController {
     }
     
     @objc func signUp() {
-        let controller = RegisterViewController()
-        navigationController?.pushViewController(controller, animated: true)
+        let registerViewController = RegisterViewController()
+        registerViewController.delegate = self
+        navigationController?.pushViewController(registerViewController, animated: true)
     }
     
-    @objc func google() {
+    @objc func loginWithGoogle() {
         print("google")
     }
     
     @objc func handleTextViewChanged(sender: UITextField) {
         sender == emailTextField ? (viewModel.email = sender.text): (viewModel.password = sender.text )
-        
         updateForm()
     }
     
@@ -142,5 +157,21 @@ class LoginViewController: UIViewController {
         loginButton.isEnabled = viewModel.formIsFalid
         loginButton.backgroundColor = viewModel.backgroundColor
         loginButton.setTitleColor(viewModel.buttonTitleColor, for: .normal)
+    }
+    
+    private func navigateToConversationViewController() {
+        let conversationViewController = ConversationViewController()
+        let navigationController = UINavigationController(rootViewController: conversationViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: true, completion: nil)
+    }
+}
+
+//MARK: - Register Delegate
+extension LoginViewController: RegisterViewControllerDelegate {
+    
+    func didSuccessfullyCreatedAccount(_ registerViewController: RegisterViewController) {
+        registerViewController.navigationController?.popViewController(animated: true)
+        navigateToConversationViewController()
     }
 }

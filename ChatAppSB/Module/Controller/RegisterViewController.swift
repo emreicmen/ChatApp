@@ -5,16 +5,20 @@
 //  Created by Emre İÇMEN on 20.12.2024.
 //
 
-import Foundation
 import UIKit
+
+protocol RegisterViewControllerDelegate: AnyObject {
+    
+    func didSuccessfullyCreatedAccount(_ vc: RegisterViewController)
+}
 
 class RegisterViewController: UIViewController {
     
     //MARK: - Properities
+    weak var delegate: RegisterViewControllerDelegate?
     var viewModel = RegisterViewModel()
         
     private let welcomeLabel = CustomLabel(text: "Register to Chatapp", labelFont: .boldSystemFont(ofSize: 30), labelColor: .black)
-    
     
     private lazy var profileImagButton: UIButton = {
         let button = UIButton(type: .system)
@@ -24,7 +28,6 @@ class RegisterViewController: UIViewController {
         button.addTarget(self, action: #selector(choseProfileImage), for: .touchUpInside)
         return button
     }()
-    
     
     private let emailTextField = CustomTextField(placeholder: "E-mail", keyboardType: .emailAddress)
     private let fullNameTextField = CustomTextField(placeholder: "Full Name")
@@ -85,8 +88,7 @@ class RegisterViewController: UIViewController {
         signInButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
         signInButton.centerX(inView: view)
     }
-    
-    
+        
     private func configureTextField() {
         emailTextField.addTarget(self, action: #selector(handleTextViewChanged(sender:)), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(handleTextViewChanged(sender:)), for: .editingChanged)
@@ -104,12 +106,16 @@ class RegisterViewController: UIViewController {
         
         let credential = AuthCredential(email: email, password: password, fullName: fullName, userName: userName, profileImage: profileImage)
         
+        showProgressBar(true)
         AuthServices.registerUser(credential: credential) { error in
+            self.showProgressBar(false)
             if let error = error {
-                print("Error while creating user (RegisterVC):\(error.localizedDescription)")
+                self.showMessage(title: "Error", message: error.localizedDescription)
                 return
             }
         }
+        
+        delegate?.didSuccessfullyCreatedAccount(self)
         
         print("Register clicked")
     }
@@ -120,7 +126,6 @@ class RegisterViewController: UIViewController {
     
     private var profileImage: UIImage?
 
-    
     @objc func handleTextViewChanged(sender: UITextField) {
         if sender == emailTextField {
             viewModel.email = sender.text

@@ -20,9 +20,10 @@ struct AuthCredential {
 
 struct AuthServices {
     
-    static func logIn() {
-        
+    static func logIn(withEmail email: String, withPassword password: String, completion: @escaping (AuthDataResult?, Error?) -> Void) {
+        Auth.auth().signIn(withEmail: email, password: password, completion: completion)
     }
+
     
     static func registerUser(credential: AuthCredential, completion: @escaping(Error?) -> Void) {
         
