@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -165,10 +166,18 @@ class LoginViewController: UIViewController {
     }
     
     func navigateToConversationViewController() {
-        let conversationViewController = ConversationViewController()
-        let navigationController = UINavigationController(rootViewController: conversationViewController)
-        navigationController.modalPresentationStyle = .fullScreen
-        self.present(navigationController, animated: true, completion: nil)
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        self.showProgressBar(true)
+        UserService.fetchUser(uid: uid) { user in
+            self.showProgressBar(false)
+            let conversationViewController = ConversationViewController(user: user)
+            let navigationController = UINavigationController(rootViewController: conversationViewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            self.present(navigationController, animated: true, completion: nil)
+            print("User: \(user)")
+        }
+        
     }
 }
 
