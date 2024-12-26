@@ -78,8 +78,8 @@ class ConversationViewController: UIViewController {
         present(navigationController, animated: true, completion: nil)
     }
     
-    private func openChat(user: User) {
-        let chatViewController = ChatViewController(otherUser: user)
+    private func openChat(currentUser: User, otherUser: User) {
+        let chatViewController = ChatViewController(currentUser: currentUser, otherUser: otherUser)
         navigationController?.pushViewController(chatViewController, animated: true)
     }
     
@@ -114,7 +114,7 @@ extension ConversationViewController: NewChatViewControllerDelegate {
     
     func controller(_ viewController: NewChatViewController, wantChatWithUser otherUser: User) {
         viewController.dismiss(animated: true, completion: nil)
-        openChat(user: otherUser)
+        openChat(currentUser: user, otherUser: otherUser)
         print(otherUser.fullName)
     }
     

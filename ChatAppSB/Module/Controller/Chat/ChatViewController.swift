@@ -19,7 +19,6 @@ class ChatViewController: UICollectionViewController {
         "little one join us",
         "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
     ]
-    private var otherUser: User
     
     private lazy var customInputView: CustomInputView = {
         
@@ -29,10 +28,14 @@ class ChatViewController: UICollectionViewController {
         return inputView
     }()
     
+    private var currentUser: User
+    private var otherUser: User
+
     
     
     //MARK: - Lifecycle
-    init(otherUser: User) {
+    init(currentUser: User, otherUser: User) {
+        self.currentUser = currentUser
         self.otherUser = otherUser
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
@@ -112,11 +115,13 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
 extension ChatViewController: CustomInputViewDelegate {
     
     func inputView(_ view: CustomInputView, wantUploadMessage message: String) {
-        print(message)
-        messages.append(message)
+
+        MessageServices.uploadMessages(message: message, currentUser: currentUser, otherUser: otherUser) { _ in
+            //
+        }
+
         collectionView.reloadData()
         view.clearTextView()
-        print("Message sended!")
     }
     
 }
