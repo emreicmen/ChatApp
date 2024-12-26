@@ -19,6 +19,7 @@ class ChatViewController: UICollectionViewController {
         "little one join us",
         "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
     ]
+    private var otherUser: User
     
     private lazy var customInputView: CustomInputView = {
         
@@ -29,8 +30,10 @@ class ChatViewController: UICollectionViewController {
     }()
     
     
+    
     //MARK: - Lifecycle
-    init() {
+    init(otherUser: User) {
+        self.otherUser = otherUser
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
     
@@ -52,13 +55,18 @@ class ChatViewController: UICollectionViewController {
     }
     
     
+    
+    
     //MARK: - Helpers
     private func configureUI() {
+        title = otherUser.fullName
         collectionView.backgroundColor = .white
         collectionView.register(ChatCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
     }
 }
+
+
 
 //MARK: - CollectionView
 extension ChatViewController {
@@ -74,6 +82,8 @@ extension ChatViewController {
         messages.count
     }
 }
+
+
 
 //MARK: - Delegate Flow Layout
 extension ChatViewController: UICollectionViewDelegateFlowLayout {
@@ -95,6 +105,9 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
         return .init(width: view.frame.width, height: estimateSize.height)
     }
 }
+
+
+
 //MARK: - CustomInputViewDelegate
 extension ChatViewController: CustomInputViewDelegate {
     

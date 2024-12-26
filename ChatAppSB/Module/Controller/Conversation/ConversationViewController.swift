@@ -35,6 +35,9 @@ class ConversationViewController: UIViewController {
     }
     
     
+    
+    
+    
     //MARK: - Helpers
     private func configureTableView() {
         tableView.delegate = self
@@ -70,11 +73,20 @@ class ConversationViewController: UIViewController {
     
     @objc func createNewChat() {
         let controller = NewChatViewController()
+        controller.newChatViewDelegate = self
         let navigationController = UINavigationController(rootViewController: controller)
         present(navigationController, animated: true, completion: nil)
     }
     
+    private func openChat(user: User) {
+        let chatViewController = ChatViewController(otherUser: user)
+        navigationController?.pushViewController(chatViewController, animated: true)
+    }
+    
 }
+
+
+
 
 //MARK: - TableView
 extension ConversationViewController: UITableViewDelegate, UITableViewDataSource {
@@ -90,8 +102,21 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chatViewController = ChatViewController()
-        navigationController?.pushViewController(chatViewController, animated: true)
+        
     }
+    
+}
+
+
+
+//MARK: - NewChatViewControllerDelegate
+extension ConversationViewController: NewChatViewControllerDelegate {
+    
+    func controller(_ viewController: NewChatViewController, wantChatWithUser otherUser: User) {
+        viewController.dismiss(animated: true, completion: nil)
+        openChat(user: otherUser)
+        print(otherUser.fullName)
+    }
+    
     
 }

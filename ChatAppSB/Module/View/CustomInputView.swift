@@ -10,8 +10,11 @@ import UIKit
 
 
 protocol CustomInputViewDelegate: AnyObject {
+    
     func inputView(_ view: CustomInputView, wantUploadMessage message: String)
 }
+
+
 class CustomInputView: UIView {
     
     //MARK: - Properties
