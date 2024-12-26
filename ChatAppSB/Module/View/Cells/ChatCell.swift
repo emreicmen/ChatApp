@@ -1,3 +1,11 @@
+//
+//  UICollectionViewCell.swift
+//  ChatAppSB
+//
+//  Created by Emre İÇMEN on 23.12.2024.
+//
+
+
 import UIKit
 
 class ChatCell: UICollectionViewCell {

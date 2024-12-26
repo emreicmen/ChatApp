@@ -14,6 +14,11 @@ class ConversationCell: UITableViewCell {
     private let fullName = CustomLabel(text: "Bruce WAYNE")
     private let recentMessage = CustomLabel(text: "Recent messages", labelFont: .systemFont(ofSize: 13), labelColor: .lightGray)
     private let dateLabel = CustomLabel(text: "20/10/2024", labelFont: .systemFont(ofSize: 10), labelColor: .lightGray)
+    var messageViewModel: MessageViewModel? {
+        didSet{
+            configure()
+        }
+    }
     
     //MARK: - Lifecycles
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -44,6 +49,13 @@ class ConversationCell: UITableViewCell {
     
     
     //MARK: - Helpers
-
+    private func configure() {
+        guard let messageViewModel = messageViewModel else { return }
+        
+        self.profileImageView.sd_setImage(with: messageViewModel.profileImageURL)
+        self.fullName.text = messageViewModel.fullName
+        self.recentMessage.text = messageViewModel.messageText
+        self.dateLabel.text = messageViewModel.timestampString
+    }
 
 }

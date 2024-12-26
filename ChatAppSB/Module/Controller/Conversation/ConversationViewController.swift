@@ -14,6 +14,12 @@ class ConversationViewController: UIViewController {
     private var user: User
     private let tableView: UITableView = UITableView()
     private let reuseIdentifier = "ConversationCell"
+    private var conversations: [Message] = []{
+        didSet{
+            tableView.reloadData()
+        }
+    }
+    private var conversationDictionary = [String: Message]()
     
     
     
@@ -32,6 +38,7 @@ class ConversationViewController: UIViewController {
         
         configureTableView()
         configureUI()
+        fetchConversations()
     }
     
     
@@ -62,6 +69,15 @@ class ConversationViewController: UIViewController {
         
         view.addSubview(tableView)
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 15, paddingRight: 15)
+    }
+    
+    private func fetchConversations() {
+        MessageServices.fetchRecentMessages { conversations in
+            conversations.forEach { conversation in
+                self.conversationDictionary[conversation.chatPartnerID] = conversation
+            }
+            self.conversations = Array(self.conversationDictionary.values)
+        }
     }
     
     @objc func logout() {
@@ -95,16 +111,24 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ConversationCell
+        let conversation = conversations[indexPath.row]
+        cell.messageViewModel = MessageViewModel(message: conversation)
         return cell
     }
         
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return conversations.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let conversation = conversations[indexPath.row]
+        self.showProgressBar(true)
+        UserService.fetchUser(uid: conversation.chatPartnerID) {[self] otherUser in
+            showProgressBar(false)
+            openChat(currentUser: user, otherUser: otherUser)
+        }
     }
     
 }

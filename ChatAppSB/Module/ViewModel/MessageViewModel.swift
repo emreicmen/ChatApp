@@ -30,6 +30,9 @@ struct MessageViewModel {
         return dateFormatter.string(from: date)
     }
     
+    var fullName: String { return message.fullName}
+    var userName: String { return message.userName}
+    
     init(message: Message) {
         self.message = message
     }

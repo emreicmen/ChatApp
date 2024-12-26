@@ -24,12 +24,20 @@ struct MessageServices {
             
             completion(messages)
         }
-        
     }
     
     
-    static func fetchRecentMessages() {
+    static func fetchRecentMessages(completion: @escaping([Message]) -> Void) {
         
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let query = collectionMessage.document(uid).collection("recent-message").order(by: "timestamp", descending: true)
+        
+        query.addSnapshotListener { snapshot, _ in
+            guard let documentChanges = snapshot?.documentChanges else { return }
+            let messages = documentChanges.map({Message(dictionary: $0.document.data())})
+            
+            completion(messages)
+        }
         
     }
     
