@@ -16,7 +16,7 @@ class UserCell: UITableViewCell {
         }
     }
     private let profileImageView = CustomImageView(width: 50, height: 50, backgroundColor: .lightGray, cornerRadius: 25)
-    private let userName = CustomLabel(text: "Bruce WAYNE", labelFont: .boldSystemFont(ofSize: 14))
+    private let userName = CustomLabel(text: "Batman", labelFont: .boldSystemFont(ofSize: 14))
     private let fullName = CustomLabel(text: "Bruce WAYNE", labelFont: .systemFont(ofSize: 9), labelColor: .lightGray)
     
     //MARK: - Lifecycle

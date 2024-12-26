@@ -16,7 +16,7 @@ struct MessageViewModel {
     var messageColor: UIColor { return message.isFromCurrentUser ? .white : .black }
     
     var rightAnchorActive: Bool { return message.isFromCurrentUser }
-    var leftAnchorActive: Bool { return message.isFromCurrentUser }
+    var leftAnchorActive: Bool { return !message.isFromCurrentUser }
     
     var shouldHideProfileImage: Bool { return message.isFromCurrentUser}
     

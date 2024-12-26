@@ -66,6 +66,7 @@ class ChatViewController: UICollectionViewController {
         MessageServices.fetchMessages(otherUser: otherUser) { messages in
             self.messages = messages
             print(messages)
+            self.collectionView.reloadData()
         }
     }
 }
@@ -77,6 +78,8 @@ extension ChatViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ChatCell
+        let message = messages[indexPath.row]
+        cell.messageViewModel = MessageViewModel(message: message)
         return cell
     }
 
@@ -97,6 +100,8 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let cell = ChatCell(frame: frame)
+        let message = messages[indexPath.row]
+        cell.messageViewModel = MessageViewModel(message: message)
         cell.layoutIfNeeded()
         
         let targetSize = CGSize(width: view.frame.width, height: 50)

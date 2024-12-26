@@ -4,7 +4,7 @@ class ChatCell: UICollectionViewCell {
     
     //MARK: - Properties
     private let profileImageView = CustomImageView(image: #imageLiteral(resourceName: "Google_Contacts_logo copy"), width: 30, height: 30, backgroundColor: .lightGray, cornerRadius: 15)
-    private let dateLabel = CustomLabel(text: "20/10/2024", labelFont: .systemFont(ofSize: 10))
+    private let dateLabel = CustomLabel(text: "20/10/2024", labelFont: .systemFont(ofSize: 9), labelColor: .lightGray)
     
     private let bubbleContainer: UIView = {
         let view = UIView()
@@ -19,6 +19,12 @@ class ChatCell: UICollectionViewCell {
     
     var dateRightAnchor: NSLayoutConstraint!
     var dateLeftAnchor: NSLayoutConstraint!
+    
+    var messageViewModel: MessageViewModel? {
+        didSet{
+            configure()
+        }
+    }
     
     private let textView: UITextView = {
         let textField = UITextView()
@@ -66,15 +72,25 @@ class ChatCell: UICollectionViewCell {
     }
     
     //MARK: - Helpers
-    func configure(text: String) {
-        bubbleLeftAnchor.isActive = true
-        dateLeftAnchor.isActive = true
+    func configure() {
+
+        guard let messageViewModel = messageViewModel else { return }
+        bubbleContainer.backgroundColor = messageViewModel.messageBackgorunColor
+        textView.text = messageViewModel.messageText
+        textView.textColor = messageViewModel.messageColor
         
-        textView.text = text
+        bubbleRightAnchor.isActive = messageViewModel.rightAnchorActive
+        dateRightAnchor.isActive = messageViewModel.rightAnchorActive
         
-        // Hücrenin dinamik boyutlandırılması için TextView'in boyutunu güncelle
-        textView.invalidateIntrinsicContentSize() // İçeriğin yeniden hesaplanması için çağırıyoruz
-        setNeedsLayout()
+        bubbleLeftAnchor.isActive = messageViewModel.leftAnchorActive
+        dateLeftAnchor.isActive = messageViewModel.leftAnchorActive
+        
+        profileImageView.sd_setImage(with: messageViewModel.profileImageURL)
+        profileImageView.isHidden = messageViewModel.shouldHideProfileImage
+        
+        guard let timestampString = messageViewModel.timestampString else {return}
+        dateLabel.text = timestampString
+        
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {

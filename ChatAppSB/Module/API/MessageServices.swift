@@ -16,7 +16,7 @@ struct MessageServices {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         var messages = [Message]()
-        let query = collectionMessage.document(uid).collection(otherUser.uid).order(by: "timestamp", descending: true)
+        let query = collectionMessage.document(uid).collection(otherUser.uid).order(by: "timestamp")
         
         query.addSnapshotListener { snapshot, _ in
             guard let documentChanges = snapshot?.documentChanges.filter({ $0.type == .added }) else { return }
