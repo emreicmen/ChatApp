@@ -54,6 +54,8 @@ class ConversationViewController: UIViewController {
         
         let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
         let newConversationBarButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(createNewChat))
+        newConversationBarButton.tintColor = MAIN_COLOR
+        logoutButton.tintColor = MAIN_COLOR
         
         navigationItem.leftBarButtonItem = logoutButton
         navigationItem.rightBarButtonItem = newConversationBarButton

@@ -10,11 +10,8 @@ import UIKit
 
 
 protocol CustomInputViewDelegate: AnyObject {
-    
     func inputView(_ view: CustomInputView, wantUploadMessage message: String)
 }
-
-
 class CustomInputView: UIView {
     
     //MARK: - Properties
@@ -67,7 +64,7 @@ class CustomInputView: UIView {
         inputTextView.anchor(top: topAnchor, left: leftAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: postBackgroundColor.leftAnchor, paddingTop: 12, paddingLeft: 8, paddingBottom: 5, paddingRight: 8)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .lightGray
+        dividerView.backgroundColor = MAIN_COLOR
         addSubview(dividerView)
         dividerView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 0.5)
     }

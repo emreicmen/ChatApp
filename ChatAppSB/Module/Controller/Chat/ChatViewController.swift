@@ -12,14 +12,7 @@ class ChatViewController: UICollectionViewController {
     
     //MARK: - Properties
     private let reuseIdentifier = "ChatCell"
-    private var messages: [String] = [
-        "Here's sample data",
-        "lorem ıpsum de gest",
-        "second sample text messages",
-        "little one join us",
-        "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"
-    ]
-    
+    private var messages: [Message] = []
     private lazy var customInputView: CustomInputView = {
         
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -27,7 +20,6 @@ class ChatViewController: UICollectionViewController {
         inputView.delegate = self
         return inputView
     }()
-    
     private var currentUser: User
     private var otherUser: User
 
@@ -48,6 +40,7 @@ class ChatViewController: UICollectionViewController {
         super.viewDidLoad()
         
         configureUI()
+        fetchMessages()
     }
     
     override var inputAccessoryView: UIView? {
@@ -62,10 +55,18 @@ class ChatViewController: UICollectionViewController {
     
     //MARK: - Helpers
     private func configureUI() {
+        
         title = otherUser.fullName
         collectionView.backgroundColor = .white
         collectionView.register(ChatCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
+    }
+    
+    private func fetchMessages() {
+        
+        MessageServices.fetchMessages(otherUser: otherUser) { messages in
+            self.messages = messages
+            print(messages)
+        }
     }
 }
 
@@ -76,8 +77,6 @@ extension ChatViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ChatCell
-        let text = messages[indexPath.row]
-        cell.configure(text: text)
         return cell
     }
 
@@ -98,8 +97,6 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let cell = ChatCell(frame: frame)
-        let text = messages[indexPath.row]
-        cell.configure(text: text)
         cell.layoutIfNeeded()
         
         let targetSize = CGSize(width: view.frame.width, height: 50)
