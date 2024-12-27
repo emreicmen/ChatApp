@@ -33,6 +33,7 @@ public extension UIViewController {
     }
     
     func getImageFromGoogleProfile(withImageUrl imageUrl: URL, completion: @escaping(UIImage) -> Void) {
+        
         SDWebImageManager.shared.loadImage(with: imageUrl, options: .continueInBackground, progress: nil) { image, data, error, cacheType, finished, url in
             if let error = error {
                 self.showMessage(title: "Error", message: error.localizedDescription)
@@ -42,5 +43,14 @@ public extension UIViewController {
             guard let image = image else { return }
             completion(image)
         }
+    }
+    
+    func stringValue(forDate date: Date) -> String? {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        
+        return dateFormatter.string(from: date)
+        
     }
 }

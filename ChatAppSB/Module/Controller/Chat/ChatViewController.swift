@@ -12,7 +12,7 @@ class ChatViewController: UICollectionViewController {
     
     //MARK: - Properties
     private let reuseIdentifier = "ChatCell"
-    private var messages: [Message] = []
+    private var messages = [[Message]]()
     private lazy var customInputView: CustomInputView = {
         
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
@@ -61,9 +61,7 @@ class ChatViewController: UICollectionViewController {
     }
     
     private func markReadAllMessage() {
-        
         MessageServices.markReadAllMessages(otherUser: otherUser)
-        
     }
     
     
@@ -80,8 +78,20 @@ class ChatViewController: UICollectionViewController {
     private func fetchMessages() {
         
         MessageServices.fetchMessages(otherUser: otherUser) { messages in
-            self.messages = messages
-            print(messages)
+
+            let groupMessages = Dictionary(grouping: messages) { (element) -> String in
+                let dateValue = element.timestamp.dateValue()
+                let stringDateValue = self.stringValue(forDate: dateValue)
+                return stringDateValue ?? ""
+            }
+            
+            self.messages.removeAll()
+            
+            let sortedKeys = groupMessages.keys.sorted(by: { $0 < $1 })
+            sortedKeys.forEach { key in
+                let values = groupMessages[key]
+                self.messages.append(values ?? [])
+            }
             self.collectionView.reloadData()
         }
     }
@@ -92,15 +102,19 @@ class ChatViewController: UICollectionViewController {
 //MARK: - CollectionView
 extension ChatViewController {
 
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return messages.count
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ChatCell
-        let message = messages[indexPath.row]
+        let message = messages[indexPath.section][indexPath.row]
         cell.messageViewModel = MessageViewModel(message: message)
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        messages.count
+        return messages[section].count
     }
 }
 
@@ -116,7 +130,7 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let cell = ChatCell(frame: frame)
-        let message = messages[indexPath.row]
+        let message = messages[indexPath.section][indexPath.row]
         cell.messageViewModel = MessageViewModel(message: message)
         cell.layoutIfNeeded()
         
