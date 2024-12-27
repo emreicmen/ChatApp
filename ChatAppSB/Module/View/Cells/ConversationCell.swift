@@ -19,6 +19,19 @@ class ConversationCell: UITableViewCell {
             configure()
         }
     }
+    private let unReadMessageLabel: UILabel = {
+        let label = UILabel()
+        label.text = "7"
+        label.font = .boldSystemFont(ofSize: 14)
+        label.textColor = .white
+        label.backgroundColor = MAIN_COLOR
+        label.setDimensions(height: 20, width: 20)
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
+        label.textAlignment = .center
+        return label
+    }()
+    
     
     //MARK: - Lifecycles
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -30,7 +43,7 @@ class ConversationCell: UITableViewCell {
         addSubview(profileImageView)
         profileImageView.centerY(inView: self, leftAnchor: leftAnchor)
         
-        let stackView = UIStackView(arrangedSubviews:  [fullName, recentMessage])
+        let stackView = UIStackView(arrangedSubviews: [fullName, recentMessage])
         stackView.axis = .vertical
         stackView.spacing = 7
         stackView.alignment = .leading
@@ -38,9 +51,18 @@ class ConversationCell: UITableViewCell {
         addSubview(stackView)
         stackView.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 15)
         
-        addSubview(dateLabel)
-        dateLabel.centerY(inView: self, rightAnchor: rightAnchor, paddingRight: 5)
+        // Stack for dateLabel and unReadMessageLabel
+        let stackDateAndUnReadMessageLabel = UIStackView(arrangedSubviews: [unReadMessageLabel, dateLabel])
+        stackDateAndUnReadMessageLabel.axis = .vertical
+        stackDateAndUnReadMessageLabel.spacing = 5 // Reduce spacing here
+        stackDateAndUnReadMessageLabel.alignment = .trailing // Ensure proper alignment
+        
+        addSubview(stackDateAndUnReadMessageLabel)
+        stackDateAndUnReadMessageLabel.centerY(inView: profileImageView)
+        stackDateAndUnReadMessageLabel.anchor(right: rightAnchor, paddingRight: 15)
     }
+
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

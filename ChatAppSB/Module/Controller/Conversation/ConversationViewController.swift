@@ -20,7 +20,18 @@ class ConversationViewController: UIViewController {
         }
     }
     private var conversationDictionary = [String: Message]()
-    
+    private let unReadMessageLabel: UILabel = {
+        let label = UILabel()
+        label.text = "7"
+        label.font = .boldSystemFont(ofSize: 14)
+        label.textColor = .white
+        label.backgroundColor = MAIN_COLOR
+        label.setDimensions(height: 20, width: 20)
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
+        label.textAlignment = .center
+        return label
+    }()
     
     
     //MARK: - Lifecycle
@@ -56,9 +67,34 @@ class ConversationViewController: UIViewController {
     }
     
     private func configureUI() {
-        title = user.fullName
         view.backgroundColor = .white
-        
+
+        // Custom title view with user name and unread message label
+        let titleView = UIView()
+
+        // Create a horizontal stack view
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        stackView.distribution = .equalCentering
+
+        let nameLabel = UILabel()
+        nameLabel.text = user.fullName
+        nameLabel.font = .boldSystemFont(ofSize: 16)
+        nameLabel.textColor = .black
+
+        stackView.addArrangedSubview(nameLabel)
+        stackView.addArrangedSubview(unReadMessageLabel)
+
+        titleView.addSubview(stackView)
+        stackView.centerX(inView: titleView)
+        stackView.centerY(inView: titleView)
+
+        unReadMessageLabel.setDimensions(height: 20, width: 20)
+        titleView.sizeToFit()
+        navigationItem.titleView = titleView
+
         let logoutButton = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(logout))
         let newConversationBarButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(createNewChat))
         newConversationBarButton.tintColor = MAIN_COLOR
@@ -66,10 +102,12 @@ class ConversationViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = logoutButton
         navigationItem.rightBarButtonItem = newConversationBarButton
-        
+
         view.addSubview(tableView)
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 15, paddingRight: 15)
     }
+
+
     
     private func fetchConversations() {
         MessageServices.fetchRecentMessages { conversations in
