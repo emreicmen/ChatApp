@@ -93,5 +93,14 @@ struct MessageServices {
         }
     }
     
-    
+    static func markReadAllMessages(otherUser: User) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return}
+        
+        let dataUpdate: [String: Any] = [
+            "newMessage": 0
+        ]
+        
+        collectionMessage.document(uid).collection("recent-message").document(otherUser.uid).updateData(dataUpdate)
+    }
 }

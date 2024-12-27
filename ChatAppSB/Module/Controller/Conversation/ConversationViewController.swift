@@ -118,19 +118,25 @@ class ConversationViewController: UIViewController {
 
     
     private func fetchConversations() {
-        MessageServices.fetchRecentMessages {[self] conversations in
+        MessageServices.fetchRecentMessages { [self] conversations in
             conversations.forEach { conversation in
                 conversationDictionary[conversation.chatPartnerID] = conversation
             }
             self.conversations = Array(self.conversationDictionary.values)
             
+            // Unread message count
             unReadCount = 0
-
             conversations.forEach { message in
-                unReadCount = unReadCount + message.newMessage
-                updateBadgeCount(to: unReadCount)
+                unReadCount += message.newMessage
             }
-            unReadMessageLabel.text = "\(unReadCount)"
+            
+            // Update badge count
+            updateBadgeCount(to: unReadCount)
+            
+            // Update unread message label
+            DispatchQueue.main.async {
+                self.unReadMessageLabel.text = "\(self.unReadCount)"
+            }
         }
     }
     
@@ -156,6 +162,7 @@ class ConversationViewController: UIViewController {
     }
     
     func updateBadgeCount(to count: Int) {
+        // Set the badge count using UNUserNotificationCenter
         UNUserNotificationCenter.current().setBadgeCount(count) { error in
             if let error = error {
                 print("Failed to update badge count: \(error.localizedDescription)")

@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseCore
 import GoogleSignIn
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        requestNotificationPermissions()
         return true
     }
     
@@ -37,6 +39,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    private func requestNotificationPermissions() {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
+            if let error = error {
+                print("Notification permission error: \(error.localizedDescription)")
+            } else if granted {
+                print("Notification permission granted")
+            } else {
+                print("Notification permission denied")
+            }
+        }
     }
 
 

@@ -41,6 +41,16 @@ class ChatViewController: UICollectionViewController {
         
         configureUI()
         fetchMessages()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.markReadAllMessage()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        markReadAllMessage()
     }
     
     override var inputAccessoryView: UIView? {
@@ -48,6 +58,12 @@ class ChatViewController: UICollectionViewController {
     }
     override var canBecomeFirstResponder: Bool {
         return true
+    }
+    
+    private func markReadAllMessage() {
+        
+        MessageServices.markReadAllMessages(otherUser: otherUser)
+        
     }
     
     
