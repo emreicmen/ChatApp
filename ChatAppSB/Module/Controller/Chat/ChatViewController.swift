@@ -22,6 +22,7 @@ class ChatViewController: UICollectionViewController {
     }()
     private var currentUser: User
     private var otherUser: User
+    private let chatHeaderIdentifier = "Chat Header"
 
     
     
@@ -30,6 +31,7 @@ class ChatViewController: UICollectionViewController {
         self.currentUser = currentUser
         self.otherUser = otherUser
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.register(ChatHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: chatHeaderIdentifier)
     }
     
     required init?(coder: NSCoder) {
@@ -102,6 +104,22 @@ class ChatViewController: UICollectionViewController {
 //MARK: - CollectionView
 extension ChatViewController {
 
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == UICollectionView.elementKindSectionHeader {
+            guard let firstMessage = messages[indexPath.section].first else { return UICollectionReusableView() }
+            let dateValue = firstMessage.timestamp.dateValue()
+            let stringValue = stringValue(forDate: dateValue)
+            let cell = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: chatHeaderIdentifier, for: indexPath) as! ChatHeader
+            cell.dateValue = stringValue
+            
+            return cell
+        }
+        
+        return UICollectionReusableView()
+    }
+    
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return messages.count
     }
@@ -138,6 +156,10 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
         let estimateSize = cell.systemLayoutSizeFitting(targetSize)
         
         return .init(width: view.frame.width, height: estimateSize.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.width, height: 25)
     }
 }
 
