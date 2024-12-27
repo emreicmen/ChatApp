@@ -42,7 +42,7 @@ struct MessageServices {
     }
     
         
-    static func uploadMessages(message: String, currentUser: User, otherUser: User, completion:((Error?) -> Void)? ) {
+    static func uploadMessages(message: String, currentUser: User, otherUser: User, unReadCount: Int ,completion:((Error?) -> Void)? ) {
     
         let dataFrom: [String: Any] = [
             "text": message,
@@ -52,7 +52,9 @@ struct MessageServices {
             
             "userName": otherUser.userName,
             "fullName": otherUser.fullName,
-            "profileImageURL": otherUser.profleImageURL
+            "profileImageURL": otherUser.profleImageURL,
+            
+            "newMessage": 0
         ]
         
         let dataTo: [String: Any] = [
@@ -63,7 +65,9 @@ struct MessageServices {
             
             "userName": currentUser.userName,
             "fullName": currentUser.fullName,
-            "profileImageURL": currentUser.profleImageURL
+            "profileImageURL": currentUser.profleImageURL,
+            
+            "newMessage": unReadCount
         ]
         
         collectionMessage.document(currentUser.uid).collection(otherUser.uid).addDocument(data: dataFrom) { _ in
@@ -73,6 +77,21 @@ struct MessageServices {
         }
     }
     
+    static func fetchSingleRecentMessage(otherUser: User, completion: @escaping(Int) -> Void) {
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        collectionMessage.document(otherUser.uid).collection("recent-message").document(uid).getDocument { snapshot, _ in
+            guard let data = snapshot?.data() else {
+                completion(0)
+                return
+            }
+            
+            let message = Message(dictionary: data)
+            completion(message.newMessage)
+            
+        }
+    }
     
     
 }

@@ -23,7 +23,10 @@ struct Message {
     
     var chatPartnerID: String { return isFromCurrentUser ? toID : fromID }
     
+    let newMessage: Int
+    
     init(dictionary: [String: Any]){
+        
         self.text = dictionary["text"] as? String ?? ""
         self.fromID = dictionary["fromID"] as? String ?? ""
         self.toID = dictionary["toID"] as? String ?? ""
@@ -33,6 +36,8 @@ struct Message {
         self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
         
         self.isFromCurrentUser = fromID == Auth.auth().currentUser?.uid
+        
+        self.newMessage = dictionary["newMessage"] as? Int ?? 0
 
     }
    

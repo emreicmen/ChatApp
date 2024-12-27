@@ -51,19 +51,17 @@ class ConversationCell: UITableViewCell {
         addSubview(stackView)
         stackView.centerY(inView: profileImageView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 15)
         
-        // Stack for dateLabel and unReadMessageLabel
         let stackDateAndUnReadMessageLabel = UIStackView(arrangedSubviews: [unReadMessageLabel, dateLabel])
         stackDateAndUnReadMessageLabel.axis = .vertical
-        stackDateAndUnReadMessageLabel.spacing = 5 // Reduce spacing here
-        stackDateAndUnReadMessageLabel.alignment = .trailing // Ensure proper alignment
+        stackDateAndUnReadMessageLabel.spacing = 5
+        stackDateAndUnReadMessageLabel.alignment = .trailing
         
         addSubview(stackDateAndUnReadMessageLabel)
         stackDateAndUnReadMessageLabel.centerY(inView: profileImageView)
         stackDateAndUnReadMessageLabel.anchor(right: rightAnchor, paddingRight: 15)
+        
     }
 
-
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -72,6 +70,7 @@ class ConversationCell: UITableViewCell {
     
     //MARK: - Helpers
     private func configure() {
+        
         guard let messageViewModel = messageViewModel else { return }
         
         self.profileImageView.sd_setImage(with: messageViewModel.profileImageURL)
