@@ -75,6 +75,12 @@ class ChatViewController: UICollectionViewController {
         title = otherUser.fullName
         collectionView.backgroundColor = .white
         collectionView.register(ChatCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        
+        collectionView.alwaysBounceVertical = true
+        collectionView.keyboardDismissMode = .onDrag
+        
+        let layout = collectionViewLayout as? UICollectionViewFlowLayout
+        layout?.sectionHeadersPinToVisibleBounds = true
     }
     
     private func fetchMessages() {
@@ -95,6 +101,7 @@ class ChatViewController: UICollectionViewController {
                 self.messages.append(values ?? [])
             }
             self.collectionView.reloadData()
+            self.collectionView.scrollToLastItem()
         }
     }
 }
