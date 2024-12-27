@@ -29,9 +29,17 @@ class ConversationViewController: UIViewController {
         label.setDimensions(height: 20, width: 20)
         label.layer.cornerRadius = 10
         label.clipsToBounds = true
+        label.isHidden = true
         label.textAlignment = .center
         return label
     }()
+    private var unReadCount: Int = 0 {
+        didSet {
+            DispatchQueue.main.async {
+                self.unReadMessageLabel.isHidden = self.unReadCount == 0
+            }
+        }
+    }
     
     
     //MARK: - Lifecycle
@@ -110,11 +118,19 @@ class ConversationViewController: UIViewController {
 
     
     private func fetchConversations() {
-        MessageServices.fetchRecentMessages { conversations in
+        MessageServices.fetchRecentMessages {[self] conversations in
             conversations.forEach { conversation in
-                self.conversationDictionary[conversation.chatPartnerID] = conversation
+                conversationDictionary[conversation.chatPartnerID] = conversation
             }
             self.conversations = Array(self.conversationDictionary.values)
+            
+            unReadCount = 0
+
+            conversations.forEach { message in
+                unReadCount = unReadCount + message.newMessage
+                updateBadgeCount(to: unReadCount)
+            }
+            unReadMessageLabel.text = "\(unReadCount)"
         }
     }
     
@@ -137,6 +153,16 @@ class ConversationViewController: UIViewController {
     private func openChat(currentUser: User, otherUser: User) {
         let chatViewController = ChatViewController(currentUser: currentUser, otherUser: otherUser)
         navigationController?.pushViewController(chatViewController, animated: true)
+    }
+    
+    func updateBadgeCount(to count: Int) {
+        UNUserNotificationCenter.current().setBadgeCount(count) { error in
+            if let error = error {
+                print("Failed to update badge count: \(error.localizedDescription)")
+            } else {
+                print("Badge count updated to \(count)")
+            }
+        }
     }
     
 }

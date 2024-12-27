@@ -33,6 +33,9 @@ struct MessageViewModel {
     var fullName: String { return message.fullName}
     var userName: String { return message.userName}
     
+    var unReadCount: Int { return message.newMessage }
+    var shouldHideUnReadLabel: Bool { return message.newMessage == 0 }
+    
     init(message: Message) {
         self.message = message
     }
