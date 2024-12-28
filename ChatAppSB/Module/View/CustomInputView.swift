@@ -12,6 +12,7 @@ import UIKit
 protocol CustomInputViewDelegate: AnyObject {
     
     func inputView(_ view: CustomInputView, wantUploadMessage message: String)
+    func inputViewForAttachButton(_ view: CustomInputView)
 }
 
 
@@ -123,13 +124,15 @@ class CustomInputView: UIView {
     }
     
     @objc func attachButtonClicked() {
-        print("attch media button clicked")
+        delegate?.inputViewForAttachButton(self)
     }
     
     @objc func recordButtonClicked() {
         print("record button clicked")
-    }    
+    }
+    
     @objc func textDidChangeProcess() {
+        
         let isTextEmpty = inputTextView.text.isEmpty || inputTextView.text == ""
         sendButton.isHidden = isTextEmpty
         postBackgroundColor.isHidden = isTextEmpty

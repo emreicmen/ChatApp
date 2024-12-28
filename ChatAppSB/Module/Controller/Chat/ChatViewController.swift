@@ -18,11 +18,29 @@ class ChatViewController: UICollectionViewController {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let inputView = CustomInputView(frame: frame)
         inputView.delegate = self
+        
         return inputView
     }()
     private var currentUser: User
     private var otherUser: User
     private let chatHeaderIdentifier = "Chat Header"
+    private lazy var attachAlert: UIAlertController = {
+        let alert = UIAlertController(title: "Attach File", message: "Select file type to want to send", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+            self.openCamera()
+        }))
+        alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+            self.openGallery()
+        }))
+        alert.addAction(UIAlertAction(title: "Location", style: .default, handler: { _ in
+            print("location")
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        return alert
+    }()
 
     
     
@@ -175,6 +193,11 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
 //MARK: - CustomInputViewDelegate
 extension ChatViewController: CustomInputViewDelegate {
     
+    
+    func inputViewForAttachButton(_ view: CustomInputView) {
+        present(attachAlert, animated: true)
+    }
+    
     func inputView(_ view: CustomInputView, wantUploadMessage message: String) {
         
         MessageServices.fetchSingleRecentMessage(otherUser: otherUser) {[self] unReadCount in
@@ -184,7 +207,16 @@ extension ChatViewController: CustomInputViewDelegate {
         }
         
         view.clearTextView()
+    }
+}
 
+extension ChatViewController{
+    
+    func openCamera(){
+        print("open camera")
     }
     
+    func openGallery(){
+        print("open Gllery")
+    }
 }
