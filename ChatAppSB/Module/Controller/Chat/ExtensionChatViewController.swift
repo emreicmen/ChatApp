@@ -43,9 +43,12 @@ extension ChatViewController: UIImagePickerControllerDelegate & UINavigationCont
 extension ChatViewController {
     
     func uploadImage(withImage image: UIImage) {
+        
+        showProgressBar(true)
         FileUploader.uploadImage(image: image) { imageURL in
             MessageServices.fetchSingleRecentMessage(otherUser: self.otherUser) { unReadMessageCount in
                 MessageServices.uploadMessages(imageURL: imageURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadMessageCount) { error in
+                    self.showProgressBar(false)
                     if let error = error {
                         print("error: \(error.localizedDescription)")
                         

@@ -49,7 +49,6 @@ class ChatViewController: UICollectionViewController {
         
         return picker
     }()
-
     
     
     //MARK: - Lifecycle

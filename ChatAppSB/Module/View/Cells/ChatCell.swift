@@ -13,7 +13,6 @@ class ChatCell: UICollectionViewCell {
     //MARK: - Properties
     private let profileImageView = CustomImageView(image: #imageLiteral(resourceName: "Google_Contacts_logo copy"), width: 30, height: 30, backgroundColor: .lightGray, cornerRadius: 15)
     private let dateLabel = CustomLabel(text: "20/10/2024", labelFont: .systemFont(ofSize: 9), labelColor: .lightGray)
-    
     private let bubbleContainer: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray6
@@ -21,19 +20,15 @@ class ChatCell: UICollectionViewCell {
         view.layer.masksToBounds = true
         return view
     }()
-
     var bubbleRightAnchor: NSLayoutConstraint!
     var bubbleLeftAnchor: NSLayoutConstraint!
-    
     var dateRightAnchor: NSLayoutConstraint!
     var dateLeftAnchor: NSLayoutConstraint!
-    
     var messageViewModel: MessageViewModel? {
         didSet{
             configure()
         }
     }
-    
     private let textView: UITextView = {
         let textField = UITextView()
         textField.backgroundColor = .clear
@@ -42,6 +37,11 @@ class ChatCell: UICollectionViewCell {
         textField.font = .systemFont(ofSize: 15)
         textField.text = "sample text message"
         return textField
+    }()
+    private let postImage: CustomImageView = {
+        let imageView = CustomImageView()
+        imageView.isHidden = true
+        return imageView
     }()
     
     //MARK: - Lifecycle
@@ -73,6 +73,9 @@ class ChatCell: UICollectionViewCell {
         dateRightAnchor.isActive = false
         
         dateLabel.anchor(bottom: contentView.bottomAnchor)
+        
+        addSubview(postImage)
+        postImage.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
     }
     
     required init?(coder: NSCoder) {
@@ -99,11 +102,18 @@ class ChatCell: UICollectionViewCell {
         guard let timestampString = messageViewModel.timestampString else {return}
         dateLabel.text = timestampString
         
+        postImage.sd_setImage(with: messageViewModel.imageURL)
+        textView.isHidden = messageViewModel.isTextHide
+        postImage.isHidden = messageViewModel.isImageHide
+        
+        if !messageViewModel.isImageHide {
+            postImage.setHeight(200)
+        }
+        
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
-        // TextView boyutunu içeriğe göre hesapla
-        let size = textView.sizeThatFits(CGSize(width: targetSize.width - 24, height: CGFloat.greatestFiniteMagnitude)) // padding ve sınırları dikkate al
-        return CGSize(width: targetSize.width, height: size.height + 20) // Alt ve üst padding ekle
+        let size = textView.sizeThatFits(CGSize(width: targetSize.width - 24, height: CGFloat.greatestFiniteMagnitude))
+        return CGSize(width: targetSize.width, height: size.height + 20)
     }
 }
