@@ -21,8 +21,8 @@ class ChatViewController: UICollectionViewController {
         
         return inputView
     }()
-    private var currentUser: User
-    private var otherUser: User
+    var currentUser: User
+    var otherUser: User
     private let chatHeaderIdentifier = "Chat Header"
     private lazy var attachAlert: UIAlertController = {
         let alert = UIAlertController(title: "Attach File", message: "Select file type to want to send", preferredStyle: .actionSheet)

@@ -18,12 +18,10 @@ struct Message {
     let userName: String
     let fullName: String
     let profileImageURL: String
-    
     var isFromCurrentUser: Bool
-    
     var chatPartnerID: String { return isFromCurrentUser ? toID : fromID }
-    
     let newMessage: Int
+    let imageURL: String
     
     init(dictionary: [String: Any]){
         
@@ -34,11 +32,9 @@ struct Message {
         self.fullName = dictionary["fullName"] as? String ?? ""
         self.profileImageURL = dictionary["profileImageURL"] as? String ?? ""
         self.timestamp = dictionary["timestamp"] as? Timestamp ?? Timestamp(date: Date())
-        
         self.isFromCurrentUser = fromID == Auth.auth().currentUser?.uid
-        
         self.newMessage = dictionary["newMessage"] as? Int ?? 0
-
+        self.imageURL = dictionary["imageURL"] as? String ?? ""
     }
    
 }
