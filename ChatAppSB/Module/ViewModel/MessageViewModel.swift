@@ -25,7 +25,7 @@ struct MessageViewModel {
     var timestampString: String? {
         let date = message.timestamp.dateValue()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
+        dateFormatter.dateFormat = "HH:mm"
         
         return dateFormatter.string(from: date)
     }

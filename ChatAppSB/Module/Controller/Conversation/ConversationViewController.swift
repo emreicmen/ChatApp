@@ -88,7 +88,7 @@ class ConversationViewController: UIViewController {
         stackView.distribution = .equalCentering
 
         let nameLabel = UILabel()
-        nameLabel.text = user.fullName
+        nameLabel.text = "Welcome \((user.fullName).uppercased())"
         nameLabel.font = .boldSystemFont(ofSize: 16)
         nameLabel.textColor = .black
 
@@ -122,7 +122,10 @@ class ConversationViewController: UIViewController {
             conversations.forEach { conversation in
                 conversationDictionary[conversation.chatPartnerID] = conversation
             }
-            self.conversations = Array(self.conversationDictionary.values)
+            
+            self.conversations = Array(self.conversationDictionary.values).sorted(by: {
+                $0.timestamp.dateValue() > $1.timestamp.dateValue()
+            })
             
             // Unread message count
             unReadCount = 0
@@ -212,8 +215,6 @@ extension ConversationViewController: NewChatViewControllerDelegate {
     func controller(_ viewController: NewChatViewController, wantChatWithUser otherUser: User) {
         viewController.dismiss(animated: true, completion: nil)
         openChat(currentUser: user, otherUser: otherUser)
-        print(otherUser.fullName)
     }
-    
     
 }

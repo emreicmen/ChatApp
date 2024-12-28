@@ -64,7 +64,7 @@ class ChatCell: UICollectionViewCell {
         bubbleLeftAnchor.isActive = false
         
         bubbleRightAnchor = bubbleContainer.rightAnchor.constraint(equalTo: rightAnchor, constant: -12)
-        bubbleRightAnchor.isActive = false
+        bubbleRightAnchor.isActive = true
         
         addSubview(dateLabel)
         dateLeftAnchor = dateLabel.leftAnchor.constraint(equalTo: bubbleContainer.rightAnchor, constant: 12)

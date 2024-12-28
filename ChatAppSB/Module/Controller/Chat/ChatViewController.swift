@@ -72,7 +72,7 @@ class ChatViewController: UICollectionViewController {
     //MARK: - Helpers
     private func configureUI() {
         
-        title = otherUser.fullName
+        title = "To \(otherUser.fullName)"
         collectionView.backgroundColor = .white
         collectionView.register(ChatCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         

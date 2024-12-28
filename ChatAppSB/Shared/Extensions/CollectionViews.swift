@@ -17,6 +17,5 @@ extension UICollectionView {
         guard lastItem >= 0 else { return }
         let lastItemIndexPath = IndexPath(item: lastItem, section: lastSection)
         scrollToItem(at: lastItemIndexPath, at: scrollPosition, animated: animated)
-        
     }
 }
