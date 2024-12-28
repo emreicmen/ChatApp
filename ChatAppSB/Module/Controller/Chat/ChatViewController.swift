@@ -41,6 +41,14 @@ class ChatViewController: UICollectionViewController {
         
         return alert
     }()
+    lazy var imagePicker: UIImagePickerController = {
+        
+        let picker = UIImagePickerController()
+        picker.allowsEditing = true
+        picker.delegate = self
+        
+        return picker
+    }()
 
     
     
@@ -150,13 +158,16 @@ extension ChatViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ChatCell
         let message = messages[indexPath.section][indexPath.row]
         cell.messageViewModel = MessageViewModel(message: message)
+        
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
         return messages[section].count
     }
 }
@@ -167,6 +178,7 @@ extension ChatViewController {
 extension ChatViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        
         return .init(top: 15, left: 0, bottom: 15, right: 0)
     }
     
@@ -210,13 +222,3 @@ extension ChatViewController: CustomInputViewDelegate {
     }
 }
 
-extension ChatViewController{
-    
-    func openCamera(){
-        print("open camera")
-    }
-    
-    func openGallery(){
-        print("open Gllery")
-    }
-}
