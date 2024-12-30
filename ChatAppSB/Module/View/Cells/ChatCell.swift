@@ -11,6 +11,7 @@ import UIKit
 
 protocol ChatCellDelegate: AnyObject {
     func cell(wantToPlayVideo cell: ChatCell, videoURL: URL?)
+    func cell(wantToShowImage cell: ChatCell, imageURL: URL?)
 }
 
 class ChatCell: UICollectionViewCell {
@@ -43,9 +44,12 @@ class ChatCell: UICollectionViewCell {
         textField.text = "sample text message"
         return textField
     }()
-    private let postImage: CustomImageView = {
+    private lazy var postImage: CustomImageView = {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showRecordedImage))
         let imageView = CustomImageView()
         imageView.isHidden = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     private lazy var postVideoButton: UIButton = {
@@ -140,5 +144,10 @@ class ChatCell: UICollectionViewCell {
     @objc func uploadVideo() {
         guard let messageViewModel = messageViewModel else { return }
         chatCellDelegate?.cell(wantToPlayVideo: self, videoURL: messageViewModel.videoURL)
+    }
+    
+    @objc func showRecordedImage() {
+        guard let messageViewModel = messageViewModel else { return }
+        chatCellDelegate?.cell(wantToShowImage: self, imageURL: messageViewModel.imageURL)
     }
 }

@@ -7,6 +7,8 @@
 
 import UIKit
 import AVFoundation
+import SDWebImage
+import ImageSlideshow
 
 class MockCameraSession {
     static func generateMockVideoURL() -> URL? {
@@ -113,11 +115,25 @@ extension ChatViewController {
 
 //MARK: - Chat Delegate
 extension ChatViewController: ChatCellDelegate {
+    
     func cell(wantToPlayVideo cell: ChatCell, videoURL: URL?) {
         guard let videoURL = videoURL else { return }
         let videoPlayerController = VideoPlayerViewController(videoURL: videoURL)
         navigationController?.pushViewController(videoPlayerController, animated: true)
     }
     
-    
+    func cell(wantToShowImage cell: ChatCell, imageURL: URL?) {
+        
+        let slideShow = ImageSlideshow()
+        guard let imageURL = imageURL else { return }
+        SDWebImageManager.shared.loadImage(with: imageURL, progress: nil) { image, _, _, _, _, _ in
+            
+            guard let image = image else { return }
+            slideShow.setImageInputs([ImageSource(image: image)])
+            slideShow.delegate = self as? ImageSlideshowDelegate
+            let controller = slideShow.presentFullScreenController(from: self)
+            controller.slideshow.activityIndicator = DefaultActivityIndicator()
+
+        }
+    }
 }
