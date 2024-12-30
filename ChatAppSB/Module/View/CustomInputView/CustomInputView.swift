@@ -63,17 +63,41 @@ class CustomInputView: UIView {
         return button
     }()
     private lazy var stackView: UIStackView = {
-        
         let stackView = UIStackView(arrangedSubviews: [inputTextView, postBackgroundColor, attachMediaButton, recordVoiceButton])
         stackView.axis = .horizontal
         stackView.spacing = 6
         stackView.alignment = .center
-        stackView.distribution = .fillProportionally
-        
-        
+        //stackView.distribution = .fillProportionally
         return stackView
     }()
-    
+    //TODO: - Record Elements
+    private lazy var cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Cancel", for: .normal)
+        button.setDimensions(height: 40, width: 100)
+        button.addTarget(self, action: #selector(cancelRecordVoice), for: .touchUpInside)
+        return button
+    }()
+    private lazy var sendRecord: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Send", for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
+        button.tintColor = .white
+        button.backgroundColor = .red
+        button.setDimensions(height: 40, width: 100)
+        button.layer.cornerRadius = 12
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(sendRecordVoice), for: .touchUpInside)
+        return button
+    }()
+    private let timerLabel = CustomLabel(text: "00:00")
+    private lazy var recordElementsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [cancelButton, timerLabel, sendRecord])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.isHidden = true
+        return stackView
+    }()
 
     
     
@@ -99,6 +123,9 @@ class CustomInputView: UIView {
         dividerView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 0.5)
         
         NotificationCenter.default.addObserver(self, selector: #selector(textDidChangeProcess), name: InputTextView.textDidChangeNotification, object: nil)
+        
+        addSubview(recordElementsStackView)
+        recordElementsStackView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 15, paddingLeft: 15, paddingRight: 15)
     }
     
     
@@ -128,7 +155,8 @@ class CustomInputView: UIView {
     }
     
     @objc func recordButtonClicked() {
-        print("record button clicked")
+        stackView.isHidden = true
+        recordElementsStackView.isHidden = false
     }
     
     @objc func textDidChangeProcess() {
@@ -139,4 +167,14 @@ class CustomInputView: UIView {
         attachMediaButton.isHidden = !isTextEmpty
         recordVoiceButton.isHidden = !isTextEmpty
     }
+    
+    @objc func cancelRecordVoice() {
+        recordElementsStackView.isHidden = true
+        stackView.isHidden = false
+    }
+    
+    @objc func sendRecordVoice() {
+        print("record button clicked")
+    }
+
 }

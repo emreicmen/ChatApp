@@ -123,7 +123,6 @@ extension ChatViewController: ChatCellDelegate {
     }
     
     func cell(wantToShowImage cell: ChatCell, imageURL: URL?) {
-        
         let slideShow = ImageSlideshow()
         guard let imageURL = imageURL else { return }
         SDWebImageManager.shared.loadImage(with: imageURL, progress: nil) { image, _, _, _, _, _ in
