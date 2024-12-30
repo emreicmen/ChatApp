@@ -70,7 +70,7 @@ class CustomInputView: UIView {
         //stackView.distribution = .fillProportionally
         return stackView
     }()
-    //TODO: - Record Elements
+    //Record Elements
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Cancel", for: .normal)
@@ -98,7 +98,9 @@ class CustomInputView: UIView {
         stackView.isHidden = true
         return stackView
     }()
-
+    var duration: CGFloat = 0.0
+    var timer: Timer!
+    var recorder = AKAudioRecorder.shared
     
     
     
@@ -154,10 +156,7 @@ class CustomInputView: UIView {
         delegate?.inputViewForAttachButton(self)
     }
     
-    @objc func recordButtonClicked() {
-        stackView.isHidden = true
-        recordElementsStackView.isHidden = false
-    }
+
     
     @objc func textDidChangeProcess() {
         
@@ -168,13 +167,43 @@ class CustomInputView: UIView {
         recordVoiceButton.isHidden = !isTextEmpty
     }
     
+    //REcord Voice stuff
+    @objc func recordButtonClicked() {
+        stackView.isHidden = true
+        recordElementsStackView.isHidden = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+            self.recorder.record()
+            self.setTimer()
+        })
+
+    }
+    
     @objc func cancelRecordVoice() {
         recordElementsStackView.isHidden = true
         stackView.isHidden = false
     }
     
     @objc func sendRecordVoice() {
-        print("record button clicked")
+        recorder.stopRecording()
+        stackView.isHidden = false
+        recordElementsStackView.isHidden = true
+    }
+    
+    func setTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateTimer() {
+        if recorder.isRecording && !recorder.isPlaying {
+            duration += 1
+            self.timerLabel.text = duration.timeStringFormatter
+        }else {
+            timer.invalidate()
+            duration = 0
+            self.timerLabel.text = "00:00"
+        }
+
     }
 
 }
