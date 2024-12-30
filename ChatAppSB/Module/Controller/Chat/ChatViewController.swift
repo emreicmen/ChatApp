@@ -14,7 +14,6 @@ class ChatViewController: UICollectionViewController {
     private let reuseIdentifier = "ChatCell"
     private var messages = [[Message]]()
     private lazy var customInputView: CustomInputView = {
-        
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let inputView = CustomInputView(frame: frame)
         inputView.delegate = self
@@ -204,21 +203,22 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
 
 //MARK: - CustomInputViewDelegate
 extension ChatViewController: CustomInputViewDelegate {
-    
-    
+   
     func inputViewForAttachButton(_ view: CustomInputView) {
         present(attachAlert, animated: true)
     }
     
     func inputView(_ view: CustomInputView, wantUploadMessage message: String) {
-        
         MessageServices.fetchSingleRecentMessage(otherUser: otherUser) {[self] unReadCount in
             MessageServices.uploadMessages(message: message, currentUser: currentUser, otherUser: otherUser, unReadCount: (unReadCount + 1)) { _ in
                 self.collectionView.reloadData()
             }
         }
-        
         view.clearTextView()
+    }
+    
+    func inputViewForAudio(_ view: CustomInputView, audioURL: URL) {
+        //
     }
 }
 

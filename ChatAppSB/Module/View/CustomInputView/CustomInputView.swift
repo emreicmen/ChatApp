@@ -10,9 +10,9 @@ import UIKit
 
 
 protocol CustomInputViewDelegate: AnyObject {
-    
     func inputView(_ view: CustomInputView, wantUploadMessage message: String)
     func inputViewForAttachButton(_ view: CustomInputView)
+    func inputViewForAudio(_ view: CustomInputView, audioURL: URL)
 }
 
 
@@ -22,8 +22,7 @@ class CustomInputView: UIView {
     weak var delegate: CustomInputViewDelegate?
     let inputTextView = InputTextView()
     private let postBackgroundColor: CustomImageView = {
-        
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(sendMessage))
+        let gestureRecognizer = UITapGestureRecognizer(target: CustomInputView.self, action: #selector(sendMessage))
         let imageView = CustomImageView(width: 40, height: 40, backgroundColor: MAIN_COLOR, cornerRadius: 20)
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(gestureRecognizer)
@@ -156,10 +155,7 @@ class CustomInputView: UIView {
         delegate?.inputViewForAttachButton(self)
     }
     
-
-    
     @objc func textDidChangeProcess() {
-        
         let isTextEmpty = inputTextView.text.isEmpty || inputTextView.text == ""
         sendButton.isHidden = isTextEmpty
         postBackgroundColor.isHidden = isTextEmpty
@@ -167,12 +163,13 @@ class CustomInputView: UIView {
         recordVoiceButton.isHidden = !isTextEmpty
     }
     
-    //REcord Voice stuff
+    //Record Voice stuff
     @objc func recordButtonClicked() {
         stackView.isHidden = true
         recordElementsStackView.isHidden = false
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+            self.recorder.myRecordings.removeAll()
             self.recorder.record()
             self.setTimer()
         })
@@ -185,6 +182,9 @@ class CustomInputView: UIView {
     }
     
     @objc func sendRecordVoice() {
+        let name = recorder.getRecordings.last ?? ""
+        guard let audioURL = recorder.getAudioURL(name: name) else { return }
+        self.delegate?.inputViewForAudio(self, audioURL: audioURL)
         recorder.stopRecording()
         stackView.isHidden = false
         recordElementsStackView.isHidden = true

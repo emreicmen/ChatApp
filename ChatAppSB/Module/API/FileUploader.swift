@@ -18,7 +18,6 @@ struct FileUploader {
         
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
         let uid = Auth.auth().currentUser?.uid ?? "/profileImages/"
-        
         let fileName = NSUUID().uuidString
         let reference = Storage.storage().reference(withPath: "/\(uid)/\(fileName)")
         
@@ -116,6 +115,28 @@ struct FileUploader {
                 DispatchQueue.main.async {
                     handler(exportSession)
                 }
+            }
+        }
+    }
+    
+    //MARK: - Upload Audio
+    static func uploadAudio(audioURL: URL, completion: @escaping(String) -> Void) {
+        
+        let uid = Auth.auth().currentUser?.uid ?? "/profileImages/"
+        let fileName = NSUUID().uuidString
+        let reference = Storage.storage().reference(withPath: "/\(uid)/\(fileName)")
+        reference.putFile(from: audioURL, metadata: nil) { metadata, error in
+            if let error = error {
+                print("File Uploader error: \(error.localizedDescription)")
+                return
+            }
+            reference.downloadURL { url, error in
+                if let error = error {
+                    print("File Uploader download error: \(error.localizedDescription)")
+                    return
+                }
+                guard let fileUrl = url?.absoluteString else { return }
+                completion(fileUrl)
             }
         }
     }
