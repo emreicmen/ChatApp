@@ -218,7 +218,18 @@ extension ChatViewController: CustomInputViewDelegate {
     }
     
     func inputViewForAudio(_ view: CustomInputView, audioURL: URL) {
-        //
+        self.showProgressBar(true)
+        FileUploader.uploadAudio(audioURL: audioURL) { audioString in
+            MessageServices.fetchSingleRecentMessage(otherUser: self.otherUser) { unReadMessageCount in
+                MessageServices.uploadMessages(audioURL: audioString ?? "", currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadMessageCount) { error in
+                    self.showProgressBar(false)
+                    if let error = error {
+                        print("error: \(error.localizedDescription)")
+                        return 
+                    }
+                }
+            }
+        }
     }
 }
 

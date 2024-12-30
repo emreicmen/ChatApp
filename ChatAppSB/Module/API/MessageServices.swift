@@ -42,7 +42,7 @@ struct MessageServices {
     }
     
         
-    static func uploadMessages(message: String = "", imageURL: String = "", videoURL: String = "" , currentUser: User, otherUser: User, unReadCount: Int ,completion:((Error?) -> Void)? ) {
+    static func uploadMessages(message: String = "", imageURL: String = "", videoURL: String = "", audioURL: String = "", currentUser: User, otherUser: User, unReadCount: Int ,completion:((Error?) -> Void)? ) {
     
         let dataFrom: [String: Any] = [
             "text": message,
@@ -56,7 +56,8 @@ struct MessageServices {
             
             "newMessage": 0,
             "imageURL": imageURL,
-            "videoURL": videoURL
+            "videoURL": videoURL,
+            "audioURL": audioURL
         ]
         
         let dataTo: [String: Any] = [
@@ -71,7 +72,8 @@ struct MessageServices {
             
             "newMessage": unReadCount,
             "imageURL": imageURL,
-            "videoURL": videoURL
+            "videoURL": videoURL,
+            "audioURL": audioURL
         ]
         
         collectionMessage.document(currentUser.uid).collection(otherUser.uid).addDocument(data: dataFrom) { _ in

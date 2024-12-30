@@ -105,6 +105,7 @@ class AKAudioRecorder: NSObject {
                 print("stop()",error.localizedDescription)
             }
         }
+        print("record stopped")
     }
     
     

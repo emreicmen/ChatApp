@@ -183,7 +183,10 @@ class CustomInputView: UIView {
     
     @objc func sendRecordVoice() {
         let name = recorder.getRecordings.last ?? ""
+        print("Audio name:\(name)")
         guard let audioURL = recorder.getAudioURL(name: name) else { return }
+        print("Audio URL:\(audioURL)")
+
         self.delegate?.inputViewForAudio(self, audioURL: audioURL)
         recorder.stopRecording()
         stackView.isHidden = false

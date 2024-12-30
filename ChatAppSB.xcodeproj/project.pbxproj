@@ -20,6 +20,7 @@
 		69AEA42D2D19BF970007F806 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 69AEA42C2D19BF970007F806 /* FirebaseStorage */; };
 		69D2F7B32D22C2EA001BD76C /* ImageSlideshow in Frameworks */ = {isa = PBXBuildFile; productRef = 69D2F7B22D22C2EA001BD76C /* ImageSlideshow */; };
 		69D2F7B52D22C2EA001BD76C /* ImageSlideshow/SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 69D2F7B42D22C2EA001BD76C /* ImageSlideshow/SDWebImage */; };
+		69D2F7BD2D22FE01001BD76C /* SwiftAudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 69D2F7BC2D22FE01001BD76C /* SwiftAudioPlayer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69D2F7BD2D22FE01001BD76C /* SwiftAudioPlayer in Frameworks */,
 				69AEA42B2D19BF970007F806 /* FirebaseMessaging in Frameworks */,
 				69AEA4252D19BF970007F806 /* FirebaseDatabase in Frameworks */,
 				69AEA4272D19BF970007F806 /* FirebaseFirestore in Frameworks */,
@@ -147,6 +149,7 @@
 				6906146A2D1BCB4B009C46CC /* GoogleSignInSwift */,
 				69D2F7B22D22C2EA001BD76C /* ImageSlideshow */,
 				69D2F7B42D22C2EA001BD76C /* ImageSlideshow/SDWebImage */,
+				69D2F7BC2D22FE01001BD76C /* SwiftAudioPlayer */,
 			);
 			productName = ChatAppSB;
 			productReference = 690EAAE42D15276600411DCB /* ChatAppSB.app */;
@@ -182,6 +185,7 @@
 				69920BA52D1B33E900E91365 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				690614672D1BCB4B009C46CC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				69D2F7B12D22C2EA001BD76C /* XCRemoteSwiftPackageReference "ImageSlideshow" */,
+				69D2F7BB2D22FE01001BD76C /* XCRemoteSwiftPackageReference "SwiftAudioPlayer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 690EAAE52D15276600411DCB /* Products */;
@@ -562,6 +566,14 @@
 				minimumVersion = 1.9.2;
 			};
 		};
+		69D2F7BB2D22FE01001BD76C /* XCRemoteSwiftPackageReference "SwiftAudioPlayer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tanhakabir/SwiftAudioPlayer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.6.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -759,6 +771,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 69D2F7B12D22C2EA001BD76C /* XCRemoteSwiftPackageReference "ImageSlideshow" */;
 			productName = ImageSlideshow/SDWebImage;
+		};
+		69D2F7BC2D22FE01001BD76C /* SwiftAudioPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69D2F7BB2D22FE01001BD76C /* XCRemoteSwiftPackageReference "SwiftAudioPlayer" */;
+			productName = SwiftAudioPlayer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

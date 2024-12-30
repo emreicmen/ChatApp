@@ -23,6 +23,7 @@ struct Message {
     let newMessage: Int
     let imageURL: String
     let videoURL: String
+    let audioURL: String
     
     init(dictionary: [String: Any]){
         
@@ -37,6 +38,7 @@ struct Message {
         self.newMessage = dictionary["newMessage"] as? Int ?? 0
         self.imageURL = dictionary["imageURL"] as? String ?? ""
         self.videoURL = dictionary["videoURL"] as? String ?? ""
+        self.audioURL = dictionary["audioURL"] as? String ?? ""
     }
    
 }

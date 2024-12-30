@@ -120,24 +120,53 @@ struct FileUploader {
     }
     
     //MARK: - Upload Audio
-    static func uploadAudio(audioURL: URL, completion: @escaping(String) -> Void) {
+    static func uploadAudio(audioURL: URL, completion: @escaping(String?) -> Void) {
         
-        let uid = Auth.auth().currentUser?.uid ?? "/profileImages/"
-        let fileName = NSUUID().uuidString
-        let reference = Storage.storage().reference(withPath: "/\(uid)/\(fileName)")
-        reference.putFile(from: audioURL, metadata: nil) { metadata, error in
-            if let error = error {
-                print("File Uploader error: \(error.localizedDescription)")
+        let uid = Auth.auth().currentUser?.uid ?? "default_user_id"
+            let fileName = NSUUID().uuidString
+            let storagePath = "/\(uid)/\(fileName).mp3"
+            let reference = Storage.storage().reference(withPath: storagePath)
+            
+            guard FileManager.default.fileExists(atPath: audioURL.path) else {
+                print("AudioURL not corret or couldn't find file path: \(audioURL)")
+                completion(nil)
                 return
             }
-            reference.downloadURL { url, error in
-                if let error = error {
-                    print("File Uploader download error: \(error.localizedDescription)")
-                    return
+
+            let metadata = StorageMetadata()
+            metadata.contentType = "audio/mp4" // MME file type for mp3
+            
+            do {
+                //Conver audio file to data and upload
+                let audioData = try Data(contentsOf: audioURL)
+                reference.putData(audioData, metadata: metadata) { metadata, error in
+                    if let error = error {
+                        print("File Uploader error: \(error.localizedDescription)")
+                        completion(nil)
+                        return
+                    }
+                    
+                    //Get the Audio url
+                    reference.downloadURL { url, error in
+                        if let error = error {
+                            print("File Uploader download error: \(error.localizedDescription)")
+                            completion(nil)
+                            return
+                        }
+                        
+                        guard let fileUrl = url?.absoluteString else {
+                            print("Download URL returned empty.")
+                            completion(nil)
+                            return
+                        }
+                        
+                        print("Upload Successfull: \(fileUrl)")
+                        completion(fileUrl)
+                    }
                 }
-                guard let fileUrl = url?.absoluteString else { return }
-                completion(fileUrl)
+            } catch {
+                print("File couldn't read: \(error.localizedDescription)")
+                completion(nil)
             }
-        }
     }
 }
