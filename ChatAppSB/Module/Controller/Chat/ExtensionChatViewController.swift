@@ -50,8 +50,6 @@ extension ChatViewController {
     }
 
 
-
-    
     func openGallery() {
         imagePicker.sourceType = .savedPhotosAlbum
         imagePicker.mediaTypes = ["public.image", "public.movie"]
@@ -76,13 +74,14 @@ extension ChatViewController: UIImagePickerControllerDelegate & UINavigationCont
     }
 }
 
+//MARK: - Upload Media
 extension ChatViewController {
     
     func uploadImage(withImage image: UIImage) {
         showProgressBar(true)
         FileUploader.uploadImage(image: image) { imageURL in
             MessageServices.fetchSingleRecentMessage(otherUser: self.otherUser) { unReadMessageCount in
-                MessageServices.uploadMessages(imageURL: imageURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadMessageCount) { error in
+                MessageServices.uploadMessages(imageURL: imageURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadMessageCount + 1) { error in
                     self.showProgressBar(false)
                     if let error = error {
                         print("error: \(error.localizedDescription)")
@@ -97,7 +96,7 @@ extension ChatViewController {
         showProgressBar(true)
         FileUploader.uploadVideo(url: url) { videoURL in
             MessageServices.fetchSingleRecentMessage(otherUser: self.otherUser) { unReadMessageCount in
-                MessageServices.uploadMessages(videoURL: videoURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadMessageCount) { error in
+                MessageServices.uploadMessages(videoURL: videoURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadMessageCount + 1) { error in
                     self.showProgressBar(false)
                     if let error = error {
                         print("error: \(error.localizedDescription)")
@@ -110,4 +109,15 @@ extension ChatViewController {
             return
         }
     }
+}
+
+//MARK: - Chat Delegate
+extension ChatViewController: ChatCellDelegate {
+    func cell(wantToPlayVideo cell: ChatCell, videoURL: URL?) {
+        guard let videoURL = videoURL else { return }
+        let videoPlayerController = VideoPlayerViewController(videoURL: videoURL)
+        navigationController?.pushViewController(videoPlayerController, animated: true)
+    }
+    
+    
 }

@@ -8,6 +8,11 @@
 
 import UIKit
 
+
+protocol ChatCellDelegate: AnyObject {
+    func cell(wantToPlayVideo cell: ChatCell, videoURL: URL?)
+}
+
 class ChatCell: UICollectionViewCell {
     
     //MARK: - Properties
@@ -52,6 +57,7 @@ class ChatCell: UICollectionViewCell {
         button.addTarget(self, action: #selector(uploadVideo), for: .touchUpInside)
         return button
     }()
+    weak var chatCellDelegate: ChatCellDelegate?
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -132,6 +138,7 @@ class ChatCell: UICollectionViewCell {
     }
     
     @objc func uploadVideo() {
-        print("upload video clicked")
+        guard let messageViewModel = messageViewModel else { return }
+        chatCellDelegate?.cell(wantToPlayVideo: self, videoURL: messageViewModel.videoURL)
     }
 }
