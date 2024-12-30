@@ -1,5 +1,5 @@
 {
-  "originHash" : "7aac36583aeb2d3b0e1fc9c31eb432763d49cb534a344e0d542fff0e80f3b310",
+  "originHash" : "15770051e0cae031f8241f7466f6ffef120e818ba9984d0e710fad9fb1c9000e",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -8,6 +8,24 @@
       "state" : {
         "revision" : "194a6706acbd25e4ef639bcaddea16e8758a3e27",
         "version" : "1.2024011602.0"
+      }
+    },
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "alamofireimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/AlamofireImage.git",
+      "state" : {
+        "revision" : "1eaf3b6c6882bed10f6e7b119665599dd2329aa1",
+        "version" : "4.3.0"
       }
     },
     {
@@ -101,6 +119,15 @@
       }
     },
     {
+      "identity" : "imageslideshow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/zvonicek/ImageSlideshow",
+      "state" : {
+        "revision" : "a54e24d47944a1ca84c2a7bf03cb435425a9929d",
+        "version" : "1.9.2"
+      }
+    },
+    {
       "identity" : "interop-ios-for-google-sdks",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/interop-ios-for-google-sdks.git",
@@ -116,6 +143,15 @@
       "state" : {
         "revision" : "78d7cd35f1d90ff74fd82e486f2cbe4b24be8cf9",
         "version" : "2.2.0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "1a0c2df04b31ed7aa318354f3583faea24f006fc",
+        "version" : "5.15.8"
       }
     },
     {
