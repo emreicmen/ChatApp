@@ -22,6 +22,7 @@ struct Message {
     var chatPartnerID: String { return isFromCurrentUser ? toID : fromID }
     let newMessage: Int
     let imageURL: String
+    let videoURL: String
     
     init(dictionary: [String: Any]){
         
@@ -35,6 +36,7 @@ struct Message {
         self.isFromCurrentUser = fromID == Auth.auth().currentUser?.uid
         self.newMessage = dictionary["newMessage"] as? Int ?? 0
         self.imageURL = dictionary["imageURL"] as? String ?? ""
+        self.videoURL = dictionary["videoURL"] as? String ?? ""
     }
    
 }

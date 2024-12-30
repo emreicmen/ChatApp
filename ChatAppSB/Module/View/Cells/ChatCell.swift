@@ -43,6 +43,15 @@ class ChatCell: UICollectionViewCell {
         imageView.isHidden = true
         return imageView
     }()
+    private lazy var postVideoButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "play.circle"), for: .normal)
+        button.tintColor = .white
+        button.isHidden = true
+        button.setTitle(" Play video", for: .normal)
+        button.addTarget(self, action: #selector(uploadVideo), for: .touchUpInside)
+        return button
+    }()
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -76,6 +85,9 @@ class ChatCell: UICollectionViewCell {
         
         addSubview(postImage)
         postImage.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
+        
+        addSubview(postVideoButton)
+        postVideoButton.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
     }
     
     required init?(coder: NSCoder) {
@@ -110,10 +122,16 @@ class ChatCell: UICollectionViewCell {
             postImage.setHeight(200)
         }
         
+        postVideoButton.isHidden = messageViewModel.isVideoHide
+        
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
         let size = textView.sizeThatFits(CGSize(width: targetSize.width - 24, height: CGFloat.greatestFiniteMagnitude))
         return CGSize(width: targetSize.width, height: size.height + 20)
+    }
+    
+    @objc func uploadVideo() {
+        print("upload video clicked")
     }
 }
