@@ -29,7 +29,6 @@ class ChatViewController: UICollectionViewController {
     private let chatHeaderIdentifier = "Chat Header"
     private lazy var attachAlert: UIAlertController = {
         let alert = UIAlertController(title: "Attach File", message: "Select file type to want to send", preferredStyle: .actionSheet)
-        
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
             self.openCamera()
         }))
@@ -37,11 +36,22 @@ class ChatViewController: UICollectionViewController {
             self.openGallery()
         }))
         alert.addAction(UIAlertAction(title: "Location", style: .default, handler: { _ in
-            print("location")
+            self.present(self.locationAlert, animated: true)
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
+        return alert
+    }()
+    private lazy var locationAlert: UIAlertController = {
+        let alert = UIAlertController(title: "Share Location", message: "Select a type to want to share location", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Current Location", style: .default, handler: { _ in
+            self.shareCurrentLocation()
+        }))
+        alert.addAction(UIAlertAction(title: "Google Map", style: .default, handler: { _ in
+            self.shareGoogleMapsLocations()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         return alert
     }()
     lazy var imagePicker: UIImagePickerController = {
@@ -236,3 +246,19 @@ extension ChatViewController: CustomInputViewDelegate {
     }
 }
 
+
+//MARK: - Location
+extension ChatViewController {
+    
+    func shareCurrentLocation() {
+        FLocationManager.shared.start { info in
+            print("Lat \(info.latitude)")
+            print("Long \(info.longitude)")
+            
+        }
+    }
+    
+    func shareGoogleMapsLocations() {
+        
+    }
+}
