@@ -50,6 +50,10 @@
             ReferencedContainer = "container:ChatAppSB.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <LocationScenarioReference
+         identifier = "../../ChatAppSB/Support/FakeLocations/HagiaSophia.gpx"
+         referenceType = "0">
+      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
