@@ -11,6 +11,7 @@ import UIKit
 
 protocol ChatCellDelegate: AnyObject {
     func cell(wantToPlayVideo cell: ChatCell, videoURL: URL?)
+    func cell(wantToPlayAudio cell: ChatCell, audioURL: URL?, isPlay: Bool)
     func cell(wantToShowImage cell: ChatCell, imageURL: URL?)
 }
 
@@ -61,7 +62,18 @@ class ChatCell: UICollectionViewCell {
         button.addTarget(self, action: #selector(uploadVideo), for: .touchUpInside)
         return button
     }()
+    private lazy var postAudioButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "play.circle"), for: .normal)
+        button.tintColor = .white
+        button.isHidden = true
+        button.setTitle(" Play audio", for: .normal)
+        button.addTarget(self, action: #selector(uploadAudio), for: .touchUpInside)
+        return button
+    }()
     weak var chatCellDelegate: ChatCellDelegate?
+    var isVoicePlaying: Bool = true
+    
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -98,6 +110,9 @@ class ChatCell: UICollectionViewCell {
         
         addSubview(postVideoButton)
         postVideoButton.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
+
+        addSubview(postAudioButton)
+        postAudioButton.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
     }
     
     required init?(coder: NSCoder) {
@@ -133,6 +148,7 @@ class ChatCell: UICollectionViewCell {
         }
         
         postVideoButton.isHidden = messageViewModel.isVideoHide
+        postAudioButton.isHidden = messageViewModel.isAudioHide
         
     }
     
@@ -146,8 +162,24 @@ class ChatCell: UICollectionViewCell {
         chatCellDelegate?.cell(wantToPlayVideo: self, videoURL: messageViewModel.videoURL)
     }
     
+    @objc func uploadAudio() {
+        guard let messageViewModel = messageViewModel else { return }
+        chatCellDelegate?.cell(wantToPlayAudio: self, audioURL: messageViewModel.audioURL, isPlay: isVoicePlaying)
+        isVoicePlaying.toggle()
+        let title = isVoicePlaying ? " Play Audio" : " Stop Audio"
+        let imageName = isVoicePlaying ? "play.circle" : "stop.circle"
+        postAudioButton.setTitle(title, for: .normal)
+        postAudioButton.setImage(UIImage(systemName: imageName), for: .normal)
+    }
+    
     @objc func showRecordedImage() {
         guard let messageViewModel = messageViewModel else { return }
         chatCellDelegate?.cell(wantToShowImage: self, imageURL: messageViewModel.imageURL)
+    }
+    
+    func resetAudioSettings() {
+        postAudioButton.setTitle(" Play Audio", for: .normal)
+        postAudioButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        isVoicePlaying = true
     }
 }

@@ -33,7 +33,9 @@ struct MessageViewModel {
     var isImageHide: Bool { return message.imageURL == "" }
     var isTextHide: Bool { return message.imageURL != "" }
     var videoURL: URL? { return URL(string: message.videoURL) }
+    var audioURL: URL? { return URL(string: message.audioURL) }
     var isVideoHide: Bool { return message.videoURL == ""}
+    var isAudioHide: Bool { return message.audioURL == ""}
     
     init(message: Message) {
         self.message = message

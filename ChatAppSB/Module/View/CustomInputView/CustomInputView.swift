@@ -170,6 +170,7 @@ class CustomInputView: UIView {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
             self.recorder.myRecordings.removeAll()
+            print(self.recorder.myRecordings.count)
             self.recorder.record()
             self.setTimer()
         })
@@ -183,11 +184,10 @@ class CustomInputView: UIView {
     
     @objc func sendRecordVoice() {
         let name = recorder.getRecordings.last ?? ""
-        print("Audio name:\(name)")
         guard let audioURL = recorder.getAudioURL(name: name) else { return }
-        print("Audio URL:\(audioURL)")
-
+        print("Audio URL:\(audioURL) + Audio name:\(name)")
         self.delegate?.inputViewForAudio(self, audioURL: audioURL)
+        
         recorder.stopRecording()
         stackView.isHidden = false
         recordElementsStackView.isHidden = true

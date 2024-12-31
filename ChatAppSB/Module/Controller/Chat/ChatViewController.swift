@@ -7,8 +7,12 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class ChatViewController: UICollectionViewController {
+    
+    var audioPlayer: AVAudioPlayer? // Global audio player
+
     
     //MARK: - Properties
     private let reuseIdentifier = "ChatCell"
@@ -145,8 +149,7 @@ extension ChatViewController {
             cell.dateValue = stringValue
             
             return cell
-        }
-        
+        }        
         return UICollectionReusableView()
     }
     
