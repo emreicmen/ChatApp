@@ -11,8 +11,6 @@ import AVFoundation
 
 class ChatViewController: UICollectionViewController {
     
-    var audioPlayer: AVAudioPlayer? // Global audio player
-
     
     //MARK: - Properties
     private let reuseIdentifier = "ChatCell"

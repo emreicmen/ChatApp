@@ -197,5 +197,19 @@ extension ChatViewController: ChatCellDelegate {
             }.resume()
         }
     }
+    
+    func cell(wantToOpenGoogleMap cell: ChatCell, locationURL: URL?) {
+        
+        guard let googleMapsURL = URL(string: "comgooglemaps://") else { return }
+        guard let locationURL = locationURL else { return }
+        
+        if UIApplication.shared.canOpenURL(googleMapsURL) {
+            //We have the app
+            UIApplication.shared.open(locationURL)
+        }else {
+            //We dont have the app
+            UIApplication.shared.open(locationURL, options: [:])
+        }
+    }
 
 }

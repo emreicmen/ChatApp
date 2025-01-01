@@ -13,6 +13,8 @@ protocol ChatCellDelegate: AnyObject {
     func cell(wantToPlayVideo cell: ChatCell, videoURL: URL?)
     func cell(wantToPlayAudio cell: ChatCell, audioURL: URL?, isPlay: Bool)
     func cell(wantToShowImage cell: ChatCell, imageURL: URL?)
+    func cell(wantToOpenGoogleMap cell: ChatCell, locationURL: URL?)
+    
 }
 
 class ChatCell: UICollectionViewCell {
@@ -71,6 +73,15 @@ class ChatCell: UICollectionViewCell {
         button.addTarget(self, action: #selector(uploadAudio), for: .touchUpInside)
         return button
     }()
+    private lazy var postGoogleMapLocationButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "location.circle"), for: .normal)
+        button.tintColor = .white
+        button.isHidden = true
+        button.setTitle(" Google Map", for: .normal)
+        button.addTarget(self, action: #selector(postGoogleMapLocation), for: .touchUpInside)
+        return button
+    }()
     weak var chatCellDelegate: ChatCellDelegate?
     var isVoicePlaying: Bool = true
     
@@ -113,13 +124,18 @@ class ChatCell: UICollectionViewCell {
 
         addSubview(postAudioButton)
         postAudioButton.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
+
+        addSubview(postGoogleMapLocationButton)
+        postGoogleMapLocationButton.anchor(top: bubbleContainer.topAnchor, left: bubbleContainer.leftAnchor, bottom: bubbleContainer.bottomAnchor, right: bubbleContainer.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 5, paddingRight: 12)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - Helpers
+    
+     
+    //MARK: - Helpers and Functions
     func configure() {
 
         guard let messageViewModel = messageViewModel else { return }
@@ -149,7 +165,7 @@ class ChatCell: UICollectionViewCell {
         
         postVideoButton.isHidden = messageViewModel.isVideoHide
         postAudioButton.isHidden = messageViewModel.isAudioHide
-        
+        postGoogleMapLocationButton.isHidden = messageViewModel.isLocationHide
     }
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
@@ -175,6 +191,10 @@ class ChatCell: UICollectionViewCell {
     @objc func showRecordedImage() {
         guard let messageViewModel = messageViewModel else { return }
         chatCellDelegate?.cell(wantToShowImage: self, imageURL: messageViewModel.imageURL)
+    }
+    @objc func postGoogleMapLocation() {
+        guard let messageViewModel = messageViewModel else { return }
+        chatCellDelegate?.cell(wantToOpenGoogleMap: self, locationURL: messageViewModel.locationURL)
     }
     
     func resetAudioSettings() {
