@@ -240,6 +240,7 @@ extension ChatViewController {
             guard let longitude = info.longitude else { return }
             
             self.uploadLocation(lat: "\(latitutde)", long: "\(longitude)")
+            FLocationManager.shared.stop()
         }
     }
     
