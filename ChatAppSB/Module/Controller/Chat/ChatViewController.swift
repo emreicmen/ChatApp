@@ -142,22 +142,7 @@ class ChatViewController: UICollectionViewController {
         MessageServices.markReadAllMessages(otherUser: otherUser)
     }
     
-    func uploadLocation(lat: String, long: String) {
-        
-        let locationURL = "https://www.google.com/maps/dir/?api=1&destination=\(lat),\(long)"
-        
-        self.showProgressBar(true)
-        MessageServices.fetchSingleRecentMessage(otherUser: otherUser) { unReadCount in
-            MessageServices.uploadMessages(locationURL: locationURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadCount + 1) { error in
-                self.showProgressBar(false)
-            
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                    return
-                }
-            }
-        }
-    }
+
 }
 
 
@@ -230,7 +215,7 @@ extension ChatViewController: UICollectionViewDelegateFlowLayout {
 
 
 
-//MARK: - CustomInputViewDelegate
+//MARK: - CustomInputView Delegate
 extension ChatViewController: CustomInputViewDelegate {
    
     func inputViewForAttachButton(_ view: CustomInputView) {
@@ -259,24 +244,5 @@ extension ChatViewController: CustomInputViewDelegate {
                 }
             }
         }
-    }
-}
-
-
-
-//MARK: - Location
-extension ChatViewController {
-    
-    func shareCurrentLocation() {
-        FLocationManager.shared.start { info in
-            guard let latitutde = info.latitude else { return }
-            guard let longitude = info.longitude else { return }
-            
-            self.uploadLocation(lat: "\(latitutde)", long: "\(longitude)")
-        }
-    }
-    
-    func shareGoogleMapsLocations() {
-        
     }
 }

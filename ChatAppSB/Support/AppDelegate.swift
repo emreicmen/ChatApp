@@ -10,10 +10,14 @@ import FirebaseCore
 import GoogleSignIn
 import UserNotifications
 import Firebase
+import GoogleMaps
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    let api = "AIzaSyBI_O52etftgI2PGUId6_SNWdDRpvAzNCY"
+//    let api = "AIzaSyADSpxP-QJ8KAsi0KE0OJkdaIe1KVMjunM"
+    
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -21,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         FirebaseConfiguration.shared.setLoggerLevel(.debug)
+        GMSServices.provideAPIKey(api)
         requestNotificationPermissions()
         return true
     }
