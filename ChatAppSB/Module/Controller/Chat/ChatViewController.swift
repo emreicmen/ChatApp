@@ -63,6 +63,14 @@ class ChatViewController: UICollectionViewController {
         return picker
     }()
     
+    override var inputAccessoryView: UIView? {
+        get { return customInputView }
+    }
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    
     
     //MARK: - Lifecycle
     init(currentUser: User, otherUser: User) {
@@ -76,6 +84,7 @@ class ChatViewController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -89,27 +98,15 @@ class ChatViewController: UICollectionViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         markReadAllMessage()
     }
-    
-    override var inputAccessoryView: UIView? {
-        get { return customInputView }
-    }
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-    
-    private func markReadAllMessage() {
-        MessageServices.markReadAllMessages(otherUser: otherUser)
-    }
-    
-    
-    
-    
-    //MARK: - Helpers
-    private func configureUI() {
         
+
+    
+    
+    
+    //MARK: - Helpers and Functions
+    private func configureUI() {
         title = "To \(otherUser.fullName)"
         collectionView.backgroundColor = .white
         collectionView.register(ChatCell.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -140,6 +137,27 @@ class ChatViewController: UICollectionViewController {
             }
             self.collectionView.reloadData()
             self.collectionView.scrollToLastItem()
+        }
+    }
+    
+    private func markReadAllMessage() {
+        MessageServices.markReadAllMessages(otherUser: otherUser)
+    }
+    
+    func uploadLocation(lat: String, long: String) {
+        
+        let locationURL = "https://www.google.com/maps/dir/?api=1&destination=\(lat),\(long)"
+        
+        self.showProgressBar(true)
+        MessageServices.fetchSingleRecentMessage(otherUser: otherUser) { unReadCount in
+            MessageServices.uploadMessages(locationURL: locationURL, currentUser: self.currentUser, otherUser: self.otherUser, unReadCount: unReadCount + 1) { error in
+                self.showProgressBar(false)
+            
+                if let error = error {
+                    print("Error: \(error.localizedDescription)")
+                    return
+                }
+            }
         }
     }
 }
@@ -247,14 +265,16 @@ extension ChatViewController: CustomInputViewDelegate {
 }
 
 
+
 //MARK: - Location
 extension ChatViewController {
     
     func shareCurrentLocation() {
         FLocationManager.shared.start { info in
-            print("Lat \(info.latitude)")
-            print("Long \(info.longitude)")
+            guard let latitutde = info.latitude else { return }
+            guard let longitude = info.longitude else { return }
             
+            self.uploadLocation(lat: "\(latitutde)", long: "\(longitude)")
         }
     }
     
