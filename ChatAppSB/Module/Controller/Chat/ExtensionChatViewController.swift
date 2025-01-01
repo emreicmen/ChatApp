@@ -245,8 +245,15 @@ extension ChatViewController {
     }
     
     func shareGoogleMapsLocations() {
-        
         let controller = ChatMapViewController()
+        controller.chatMapViewControllerDelegate = self
         navigationController?.pushViewController(controller, animated: true)
+    }
+}
+
+extension ChatViewController: ChatMapViewControllerDelegate {
+    func didTapLocation(latitude: String, longitude: String) {
+        navigationController?.popViewController(animated: true)
+        uploadLocation(lat: latitude, long: longitude)
     }
 }
