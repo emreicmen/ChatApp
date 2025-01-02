@@ -29,7 +29,7 @@ class ConversationViewController: UIViewController {
     }
     private let searchController = UISearchController(searchResultsController: nil)
     private var filterConversation: [Message] = []
-    var inSearchmode: Bool {
+    var inSearchMode: Bool {
         return searchController.isActive && !searchController.searchBar.text!.isEmpty
     }
     
@@ -142,10 +142,7 @@ class ConversationViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateProfile), name: .userProfile, object: nil)
     }
     
-    
-
-
-    
+      
     private func fetchConversations() {
         MessageServices.fetchRecentMessages { [self] conversations in
             conversations.forEach { conversation in
@@ -236,18 +233,18 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ConversationCell
-        let conversation = inSearchmode ? filterConversation[indexPath.row] : conversations[indexPath.row]
+        let conversation = inSearchMode ? filterConversation[indexPath.row] : conversations[indexPath.row]
         cell.messageViewModel = MessageViewModel(message: conversation)
         return cell
     }
         
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return inSearchmode ? filterConversation.count : conversations.count
+        return inSearchMode ? filterConversation.count : conversations.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let conversation = inSearchmode ? filterConversation[indexPath.row] : conversations[indexPath.row]
+        let conversation = inSearchMode ? filterConversation[indexPath.row] : conversations[indexPath.row]
         self.showProgressBar(true)
         UserService.fetchUser(uid: conversation.chatPartnerID) {[self] otherUser in
             showProgressBar(false)
