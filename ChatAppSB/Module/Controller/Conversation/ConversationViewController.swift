@@ -50,6 +50,9 @@ class ConversationViewController: UIViewController {
         button.addTarget(self, action: #selector(goToProfileView), for: .touchUpInside)
         return button
     }()
+    private let searchController = UISearchController(searchResultsController: nil)
+    
+    
     
     
     //MARK: - Lifecycle
@@ -68,6 +71,7 @@ class ConversationViewController: UIViewController {
         configureTableView()
         configureUI()
         fetchConversations()
+        configureSearchController()
 
     }
     
@@ -162,6 +166,32 @@ class ConversationViewController: UIViewController {
         }
     }
     
+    private func openChat(currentUser: User, otherUser: User) {
+        let chatViewController = ChatViewController(currentUser: currentUser, otherUser: otherUser)
+        navigationController?.pushViewController(chatViewController, animated: true)
+    }
+    
+    private func configureSearchController() {
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = false
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Search"
+        navigationItem.searchController = searchController
+    }
+    
+    func updateBadgeCount(to count: Int) {
+        // Set the badge count using UNUserNotificationCenter
+        UNUserNotificationCenter.current().setBadgeCount(count) { error in
+            if let error = error {
+                print("Failed to update badge count: \(error.localizedDescription)")
+            } else {
+                print("Badge count updated to \(count)")
+            }
+        }
+    }
+    
     @objc func logout() {
         do{
             try Auth.auth().signOut()
@@ -178,22 +208,6 @@ class ConversationViewController: UIViewController {
         present(navigationController, animated: true, completion: nil)
     }
     
-    private func openChat(currentUser: User, otherUser: User) {
-        let chatViewController = ChatViewController(currentUser: currentUser, otherUser: otherUser)
-        navigationController?.pushViewController(chatViewController, animated: true)
-    }
-    
-    func updateBadgeCount(to count: Int) {
-        // Set the badge count using UNUserNotificationCenter
-        UNUserNotificationCenter.current().setBadgeCount(count) { error in
-            if let error = error {
-                print("Failed to update badge count: \(error.localizedDescription)")
-            } else {
-                print("Badge count updated to \(count)")
-            }
-        }
-    }
-    
     @objc func goToProfileView() {
         let controller = ProfileViewController(user: user)
         navigationController?.pushViewController(controller, animated: true)
@@ -203,7 +217,6 @@ class ConversationViewController: UIViewController {
         UserService.fetchUser(uid: user.uid) { user in
             self.user = user
             self.title = user.fullName
-            print(user.fullName)
         }
     }
     
@@ -248,5 +261,16 @@ extension ConversationViewController: NewChatViewControllerDelegate {
         viewController.dismiss(animated: true, completion: nil)
         openChat(currentUser: user, otherUser: otherUser)
     }
+    
+}
+
+
+//MARK: - Search Delegate
+extension ConversationViewController : UISearchBarDelegate, UISearchResultsUpdating {
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        print(searchController.searchBar.text)
+    }
+    
     
 }
