@@ -40,6 +40,16 @@ class ConversationViewController: UIViewController {
             }
         }
     }
+    private lazy var profileButton: UIButton =  {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "person.2.badge.gearshape"), for: .normal)
+        button.backgroundColor = MAIN_COLOR
+        button.tintColor = .white
+        button.setDimensions(height: 50, width: 50)
+        button.layer.cornerRadius = 50 / 2
+        button.addTarget(self, action: #selector(goToProfileView), for: .touchUpInside)
+        return button
+    }()
     
     
     //MARK: - Lifecycle
@@ -113,6 +123,9 @@ class ConversationViewController: UIViewController {
 
         view.addSubview(tableView)
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 15, paddingRight: 15)
+        
+        view.addSubview(profileButton)
+        profileButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 10, paddingRight: 20)
     }
 
 
@@ -173,6 +186,11 @@ class ConversationViewController: UIViewController {
                 print("Badge count updated to \(count)")
             }
         }
+    }
+    
+    @objc func goToProfileView() {
+        let controller = ProfileViewController(user: user)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }
