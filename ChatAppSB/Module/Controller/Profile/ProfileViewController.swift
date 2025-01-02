@@ -5,6 +5,7 @@
 //  Created by Emre İÇMEN on 2.01.2025.
 //
 
+import Foundation
 import UIKit
 
 class ProfileViewController: UIViewController {
@@ -16,6 +17,9 @@ class ProfileViewController: UIViewController {
     private let profileImageView = CustomImageView(backgroundColor: .lightGray, cornerRadius: 20)
     private let tableView = UITableView()
     private let reuseIdentifier = "ProfileCell"
+    
+
+    
     
     
     //MARK: - Lifecycle
@@ -50,6 +54,11 @@ class ProfileViewController: UIViewController {
         
         view.addSubview(tableView)
         tableView.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, bottom:  view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 10, paddingBottom: 25, paddingRight: 10)
+        
+        let editProfileButton = UIBarButtonItem(title: "Edit Profile", style: .plain, target: self, action: #selector(editProfile))
+        editProfileButton.tintColor = .systemBlue
+        navigationItem.rightBarButtonItem = editProfileButton
+
     }
     
     private func configureTableView() {
@@ -66,6 +75,11 @@ class ProfileViewController: UIViewController {
         guard let imageURL = URL(string: user.profleImageURL) else { return }
         profileImageView.sd_setImage(with: imageURL)
         profileImageView.contentMode = .scaleAspectFill
+    }
+    
+    @objc func editProfile() {
+        let editProfileController = EditProfileViewController(user: user)
+        navigationController?.pushViewController(editProfileController, animated: true)
     }
 
 }

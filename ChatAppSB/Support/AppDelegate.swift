@@ -16,7 +16,6 @@ import GoogleMaps
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let api = "AIzaSyBI_O52etftgI2PGUId6_SNWdDRpvAzNCY"
-//    let api = "AIzaSyADSpxP-QJ8KAsi0KE0OJkdaIe1KVMjunM"
     
     var window: UIWindow?
 
@@ -24,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Override point for customization after application launch.
         FirebaseApp.configure()
-        FirebaseConfiguration.shared.setLoggerLevel(.debug)
         GMSServices.provideAPIKey(api)
         requestNotificationPermissions()
         return true
