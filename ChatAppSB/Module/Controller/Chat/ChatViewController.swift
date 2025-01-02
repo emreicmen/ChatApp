@@ -14,7 +14,28 @@ class ChatViewController: UICollectionViewController {
     
     //MARK: - Properties
     private let reuseIdentifier = "ChatCell"
-    private var messages = [[Message]]()
+    private var messages = [[Message]]() {
+        didSet{
+            emptyView.isHidden = !messages.isEmpty
+        }
+    }
+    var currentUser: User
+    var otherUser: User
+    private let chatHeaderIdentifier = "Chat Header"
+    lazy var imagePicker: UIImagePickerController = {
+        let picker = UIImagePickerController()
+        picker.allowsEditing = true
+        picker.delegate = self
+        return picker
+    }()
+    override var inputAccessoryView: UIView? {
+        get { return customInputView }
+    }
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    //MARK: - UI Elements
     private lazy var customInputView: CustomInputView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         let inputView = CustomInputView(frame: frame)
@@ -22,9 +43,6 @@ class ChatViewController: UICollectionViewController {
         
         return inputView
     }()
-    var currentUser: User
-    var otherUser: User
-    private let chatHeaderIdentifier = "Chat Header"
     private lazy var attachAlert: UIAlertController = {
         let alert = UIAlertController(title: "Attach File", message: "Select file type to want to send", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
@@ -52,23 +70,15 @@ class ChatViewController: UICollectionViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         return alert
     }()
-    lazy var imagePicker: UIImagePickerController = {
+    private let emptyView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGray3
+        view.layer.cornerRadius = 12
+        view.isHidden = true
         
-        let picker = UIImagePickerController()
-        picker.allowsEditing = true
-        picker.delegate = self
-        
-        return picker
+        return view
     }()
-    
-    override var inputAccessoryView: UIView? {
-        get { return customInputView }
-    }
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-    
-    
+    private let emptyLabel = CustomLabel(text: "Converations are encrypted!", labelColor: .yellow)
     
     //MARK: - Lifecycle
     init(currentUser: User, otherUser: User) {
@@ -114,6 +124,12 @@ class ChatViewController: UICollectionViewController {
         
         let layout = collectionViewLayout as? UICollectionViewFlowLayout
         layout?.sectionHeadersPinToVisibleBounds = true
+        
+        view.addSubview(emptyView)
+        emptyView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right:  view.rightAnchor, paddingLeft: 25, paddingBottom: 70, paddingRight: 25, height: 40)
+        emptyView.addSubview(emptyLabel)
+        emptyLabel.anchor(top: emptyView.topAnchor, left: emptyView.leftAnchor, bottom: emptyView.bottomAnchor, right: emptyView.rightAnchor, paddingTop: 7, paddingLeft: 7, paddingBottom: 7, paddingRight: 7 )
+        emptyView.center(inView: emptyView)
     }
     
     private func fetchMessages() {
