@@ -51,7 +51,7 @@ struct AuthServices {
                     "fullName": credential.fullName,
                     "password": credential.password,
                     "uid": uid,
-                    "profleImageURL": imageUrl
+                    "profileImageURL": imageUrl
                 ]
                 
                 collectionUser.document(uid).setData(data, completion: completion)
@@ -68,7 +68,7 @@ struct AuthServices {
                 "userName": credential.userName,
                 "fullName": credential.fullName,
                 "uid": credential.uid,
-                "profleImageURL": imageUrl
+                "profileImageURL": imageUrl
             ]
             
             collectionUser.document(credential.uid).setData(data, completion: completion)

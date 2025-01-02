@@ -52,7 +52,7 @@ struct MessageServices {
             
             "userName": otherUser.userName,
             "fullName": otherUser.fullName,
-            "profileImageURL": otherUser.profleImageURL,
+            "profileImageURL": otherUser.profileImageURL,
             
             "newMessage": 0,
             "imageURL": imageURL,
@@ -69,7 +69,7 @@ struct MessageServices {
             
             "userName": currentUser.userName,
             "fullName": currentUser.fullName,
-            "profileImageURL": currentUser.profleImageURL,
+            "profileImageURL": currentUser.profileImageURL,
             
             "newMessage": unReadCount,
             "imageURL": imageURL,

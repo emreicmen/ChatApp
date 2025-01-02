@@ -14,7 +14,7 @@ struct UserViewModel {
     var fullName: String { return user.fullName }
     var userName: String { return user.userName }
     var profileImageView: URL? {
-        return URL(string: user.profleImageURL)
+        return URL(string: user.profileImageURL)
     }
     
     init(user: User) {

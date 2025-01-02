@@ -98,18 +98,40 @@ class EditProfileViewController: UIViewController{
     private func configureData() {
         fullNameTextField.text = user.fullName
         userNameTextField.text = user.userName
-        guard let imageURL = URL(string: user.profleImageURL) else { return }
+        guard let imageURL = URL(string: user.profileImageURL) else { return }
         profileImageView.sd_setImage(with: imageURL)
         profileImageView.contentMode = .scaleAspectFill
     }
     
     @objc func save() {
-        //Save changes and push firebase
-        print("save clicked")
+        guard let fullName = fullNameTextField.text else { return }
+        guard let userName = userNameTextField.text else { return }
+        showProgressBar(true)
         if selectedImage == nil {
-            
+            //update data without image
+            let params = [
+                "fullName": fullName,
+                "userName": userName,
+            ]
+            updateUser(params: params)
+
         }else {
-            
+            //Upload with image
+            guard let selectedImage = selectedImage else { return }
+            FileUploader.uploadImage(image: selectedImage) { imageURL in
+                let params = [
+                    "fullName": fullName,
+                    "userName": userName,
+                    "profileImageURL": imageURL
+                ]
+                self.updateUser(params: params)
+            }
+        }
+    }
+    
+    private func updateUser(params: [String: Any]) {
+        UserService.setNewUserData(data: params) { _ in
+            self.showProgressBar(false)
         }
     }
     

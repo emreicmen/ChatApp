@@ -13,13 +13,13 @@ struct User {
     let userName: String
     let fullName: String
     let uid: String
-    let profleImageURL: String
+    let profileImageURL: String
     
     init(dictionary: [String: Any]) {
         self.email = dictionary["email"] as? String ?? ""
         self.userName = dictionary["userName"] as? String ?? ""
         self.fullName = dictionary["fullName"] as? String ?? ""
         self.uid = dictionary["uid"] as? String ?? ""
-        self.profleImageURL = dictionary["profleImageURL"] as? String ?? ""
+        self.profileImageURL = dictionary["profileImageURL"] as? String ?? ""
     }
 }

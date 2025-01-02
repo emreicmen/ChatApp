@@ -71,7 +71,7 @@ class ProfileViewController: UIViewController {
     
     private func configureData() {
         tableView.reloadData()
-        guard let imageURL = URL(string: user.profleImageURL) else { return }
+        guard let imageURL = URL(string: user.profileImageURL) else { return }
         profileImageView.sd_setImage(with: imageURL)
         profileImageView.contentMode = .scaleAspectFill
     }
