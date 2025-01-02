@@ -13,7 +13,7 @@ class ProfileViewController: UIViewController {
 
     
     //MARK: - Properties
-    private let user: User
+    private var user: User
     private let profileImageView = CustomImageView(backgroundColor: .lightGray, cornerRadius: 20)
     private let tableView = UITableView()
     private let reuseIdentifier = "ProfileCell"
@@ -37,6 +37,7 @@ class ProfileViewController: UIViewController {
         configureUI()
         configureTableView()
         configureData()
+        
     }
     
 
@@ -57,6 +58,8 @@ class ProfileViewController: UIViewController {
         let editProfileButton = UIBarButtonItem(title: "Edit Profile", style: .plain, target: self, action: #selector(editProfile))
         editProfileButton.tintColor = .systemBlue
         navigationItem.rightBarButtonItem = editProfileButton
+
+        NotificationCenter.default.addObserver(self, selector: #selector(updateProfile), name: .userProfile, object: nil)
 
     }
     
@@ -79,6 +82,15 @@ class ProfileViewController: UIViewController {
     @objc func editProfile() {
         let editProfileController = EditProfileViewController(user: user)
         navigationController?.pushViewController(editProfileController, animated: true)
+    }
+    
+    @objc func updateProfile() {
+        navigationController?.popViewController(animated: true)
+        UserService.fetchUser (uid: user.uid){ user in
+            self.user = user
+            self.configureData()
+        }
+
     }
 
 }

@@ -68,6 +68,7 @@ class ConversationViewController: UIViewController {
         configureTableView()
         configureUI()
         fetchConversations()
+
     }
     
     
@@ -85,8 +86,9 @@ class ConversationViewController: UIViewController {
     }
     
     private func configureUI() {
+        title = user.fullName
         view.backgroundColor = .white
-
+        print(user.fullName)
         // Custom title view with user name and unread message label
         let titleView = UIView()
 
@@ -98,7 +100,7 @@ class ConversationViewController: UIViewController {
         stackView.distribution = .equalCentering
 
         let nameLabel = UILabel()
-        nameLabel.text = "Welcome \((user.fullName).uppercased())"
+        nameLabel.text = user.fullName
         nameLabel.font = .boldSystemFont(ofSize: 16)
         nameLabel.textColor = .black
 
@@ -126,7 +128,11 @@ class ConversationViewController: UIViewController {
         
         view.addSubview(profileButton)
         profileButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 10, paddingRight: 20)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateProfile), name: .userProfile, object: nil)
     }
+    
+    
 
 
     
@@ -191,6 +197,14 @@ class ConversationViewController: UIViewController {
     @objc func goToProfileView() {
         let controller = ProfileViewController(user: user)
         navigationController?.pushViewController(controller, animated: true)
+    }
+        
+    @objc func updateProfile() {
+        UserService.fetchUser(uid: user.uid) { user in
+            self.user = user
+            self.title = user.fullName
+            print(user.fullName)
+        }
     }
     
 }
