@@ -21,7 +21,6 @@ class ProfileViewController: UIViewController {
 
     
     
-    
     //MARK: - Lifecycle
     init(user: User) {
         self.user = user
