@@ -268,6 +268,32 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            showProgressBar(true)
+            let conversation = inSearchMode ? filterConversation[indexPath.row] : conversations[indexPath.row]
+            MessageServices.deleteMessages(otherUser: conversation.toID ) { [self] error in
+                self.showProgressBar(false)
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                if editingStyle == .delete {
+                    if inSearchMode {
+                        filterConversation.remove(at: indexPath.row)
+                    }else {
+                        conversations.remove(at: indexPath.row)
+                    }
+                    tableView.reloadData()
+                }
+            }
+        }
+    }
+    
 }
 
 

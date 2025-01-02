@@ -112,4 +112,21 @@ struct MessageServices {
         
         collectionMessage.document(uid).collection("recent-message").document(otherUser.uid).updateData(dataUpdate)
     }
+    
+    static func deleteMessages(otherUser: String, completion: @escaping(Error?) -> Void) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        //Get conversations
+        collectionMessage.document(uid).collection(otherUser).getDocuments { snapshot, _ in
+            //Delete all conversations
+            snapshot?.documents.forEach({ document in
+                let documentID = document.documentID
+                collectionMessage.document(uid).collection(otherUser).document(documentID).delete()
+            })
+            //Delete recent conversations
+            let ref = collectionMessage.document(uid).collection("recent-message").document(otherUser)
+            ref.delete(completion: completion)
+        }
+    }
 }
+
+
