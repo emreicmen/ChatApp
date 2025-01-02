@@ -73,11 +73,13 @@ class ProfileViewController: UIViewController {
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return ProfileFields.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ProfileCell
+        guard let field = ProfileFields(rawValue: indexPath.row) else { return cell}
+        cell.profileViewModel = ProfileViewModel(user: user, fields: field)
         return cell
     }
     

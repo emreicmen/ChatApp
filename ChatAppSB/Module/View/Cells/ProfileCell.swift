@@ -10,9 +10,13 @@ import UIKit
 class ProfileCell: UITableViewCell {
     
     //MARK: - Properties
-    private let nameLabel = CustomLabel(text: "Name", labelColor: MAIN_COLOR)
+    private let titleLabel = CustomLabel(text: "Name", labelColor: MAIN_COLOR)
     private let userNameLabel = CustomLabel(text: "Username")
-    
+    var profileViewModel: ProfileViewModel? {
+        didSet {
+            configure()
+        }
+    }
     
     
     
@@ -20,7 +24,7 @@ class ProfileCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        let stackView = UIStackView(arrangedSubviews: [nameLabel, userNameLabel])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, userNameLabel])
         stackView.axis = .vertical
         stackView.spacing = 6
         stackView.alignment = .leading
@@ -38,4 +42,10 @@ class ProfileCell: UITableViewCell {
     
     
     //MARK: - Helpers and Functions
+    private func configure() {
+        guard let profileViewModel = profileViewModel else { return }
+        titleLabel.text = profileViewModel.filedTitle
+        userNameLabel.text = profileViewModel.optionType
+        
+    }
 }
