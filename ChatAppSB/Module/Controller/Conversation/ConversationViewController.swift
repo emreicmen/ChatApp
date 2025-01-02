@@ -16,6 +16,7 @@ class ConversationViewController: UIViewController {
     private let reuseIdentifier = "ConversationCell"
     private var conversations: [Message] = []{
         didSet{
+            emptyView.isHidden = !conversations.isEmpty
             tableView.reloadData()
         }
     }
@@ -57,6 +58,15 @@ class ConversationViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
+    private let emptyView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemGray3
+        view.layer.cornerRadius = 12
+        view.isHidden = true
+        
+        return view
+    }()
+    private let emptyLabel = CustomLabel(text: "There are no converation, Click add to start!", labelColor: .yellow)
 
     
     
@@ -140,6 +150,12 @@ class ConversationViewController: UIViewController {
         profileButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 10, paddingRight: 20)
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateProfile), name: .userProfile, object: nil)
+        
+        view.addSubview(emptyView)
+        emptyView.anchor(left: view.leftAnchor, bottom: profileButton.topAnchor, right:  view.rightAnchor, paddingLeft: 25, paddingBottom: 25, paddingRight: 25, height: 40)
+        emptyView.addSubview(emptyLabel)
+        emptyLabel.anchor(top: emptyView.topAnchor, left: emptyView.leftAnchor, bottom: emptyView.bottomAnchor, right: emptyView.rightAnchor, paddingTop: 7, paddingLeft: 7, paddingBottom: 7, paddingRight: 7 )
+        emptyView.center(inView: emptyView)
     }
     
       
