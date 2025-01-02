@@ -20,6 +20,27 @@ class ConversationViewController: UIViewController {
         }
     }
     private var conversationDictionary = [String: Message]()
+    private var unReadCount: Int = 0 {
+        didSet {
+            DispatchQueue.main.async {
+                self.unReadMessageLabel.isHidden = self.unReadCount == 0
+            }
+        }
+    }
+    private let searchController = UISearchController(searchResultsController: nil)
+    private var filterConversation: [Message] = []
+    
+    //MARK: - UI Elements
+    private lazy var profileButton: UIButton =  {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "person.2.badge.gearshape"), for: .normal)
+        button.backgroundColor = MAIN_COLOR
+        button.tintColor = .white
+        button.setDimensions(height: 50, width: 50)
+        button.layer.cornerRadius = 50 / 2
+        button.addTarget(self, action: #selector(goToProfileView), for: .touchUpInside)
+        return button
+    }()
     private let unReadMessageLabel: UILabel = {
         let label = UILabel()
         label.text = "7"
@@ -33,25 +54,7 @@ class ConversationViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
-    private var unReadCount: Int = 0 {
-        didSet {
-            DispatchQueue.main.async {
-                self.unReadMessageLabel.isHidden = self.unReadCount == 0
-            }
-        }
-    }
-    private lazy var profileButton: UIButton =  {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "person.2.badge.gearshape"), for: .normal)
-        button.backgroundColor = MAIN_COLOR
-        button.tintColor = .white
-        button.setDimensions(height: 50, width: 50)
-        button.layer.cornerRadius = 50 / 2
-        button.addTarget(self, action: #selector(goToProfileView), for: .touchUpInside)
-        return button
-    }()
-    private let searchController = UISearchController(searchResultsController: nil)
-    
+
     
     
     
@@ -269,7 +272,21 @@ extension ConversationViewController: NewChatViewControllerDelegate {
 extension ConversationViewController : UISearchBarDelegate, UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
-        print(searchController.searchBar.text)
+        
+        guard let searchText = searchController.searchBar.text?.lowercased() else { return }
+        filterConversation = conversations.filter({ $0.userName.contains(searchText) || $0.fullName.lowercased().contains(searchText)})
+        print(filterConversation)
+        tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+        searchBar.text = ""
+        searchBar.showsCancelButton = false
     }
     
     
