@@ -29,6 +29,9 @@ class ConversationViewController: UIViewController {
     }
     private let searchController = UISearchController(searchResultsController: nil)
     private var filterConversation: [Message] = []
+    var inSearchmode: Bool {
+        return searchController.isActive && !searchController.searchBar.text!.isEmpty
+    }
     
     //MARK: - UI Elements
     private lazy var profileButton: UIButton =  {
@@ -233,19 +236,18 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ConversationCell
-        let conversation = conversations[indexPath.row]
+        let conversation = inSearchmode ? filterConversation[indexPath.row] : conversations[indexPath.row]
         cell.messageViewModel = MessageViewModel(message: conversation)
         return cell
     }
         
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversations.count
+        return inSearchmode ? filterConversation.count : conversations.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let conversation = conversations[indexPath.row]
+        let conversation = inSearchmode ? filterConversation[indexPath.row] : conversations[indexPath.row]
         self.showProgressBar(true)
         UserService.fetchUser(uid: conversation.chatPartnerID) {[self] otherUser in
             showProgressBar(false)
@@ -275,7 +277,6 @@ extension ConversationViewController : UISearchBarDelegate, UISearchResultsUpdat
         
         guard let searchText = searchController.searchBar.text?.lowercased() else { return }
         filterConversation = conversations.filter({ $0.userName.contains(searchText) || $0.fullName.lowercased().contains(searchText)})
-        print(filterConversation)
         tableView.reloadData()
     }
     
